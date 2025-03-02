@@ -1,9 +1,0 @@
-[
-    {
-        "name": "MinGW (встроенный)",
-        "compilers": {
-            "C": "${workspaceFolder}/w64devkit/bin/gcc.exe",
-            "CXX": "${workspaceFolder}/w64devkit/bin/g++.exe"
-        }
-    }
-]
