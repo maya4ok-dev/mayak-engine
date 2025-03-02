@@ -101,4 +101,5 @@
     "C_Cpp.dimInactiveRegions": false,
     "cmake.generator": "MinGW Makefiles",
     "cmake.configureOnOpen": true,
+    "C_Cpp.default.compilerPath": "C:/w64devkit/bin/gcc.exe",
 }
