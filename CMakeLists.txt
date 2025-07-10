@@ -1,47 +1,44 @@
-cmake_minimum_required(VERSION 3.10) # Set minimum required CMake version
+cmake_minimum_required(VERSION 3.30)
+project(mayak-engine)
 
-set(TARGET_NAME Game)
-project(${TARGET_NAME}) # Define the project name
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Set C++ standard
-set(CMAKE_CXX_STANDARD 17)
+# С++20
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Define source paths
-set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
-set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
-set(LIB_DIR ${CMAKE_SOURCE_DIR}/lib)
-set(SCRIPTS_DIR ${CMAKE_BINARY_DIR})
+set(SDL_SHARED OFF CACHE BOOL "Build SDL shared library")
+set(SDL_STATIC ON CACHE BOOL "Build SDL static library")
 
-# Gather all source files
-file(GLOB_RECURSE SOURCES ${SRC_DIR}/*.cpp)
+# Sources
+file(GLOB_RECURSE SOURCES "src/*.cpp")
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
+# Dependencies
+add_subdirectory(external/SDL)
+add_subdirectory(external/box2d)
 
-# Create executable
-add_executable(${TARGET_NAME} ${SOURCES})
+add_library(mayak-engine STATIC ${SOURCES})
 
-add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/scripts ${CMAKE_BINARY_DIR}/bin/scripts
+# Catch extra errors
+target_compile_options(mayak-engine PRIVATE -Wall -Wextra -Werror)
+
+# Header-only dependencies + engine
+target_include_directories(
+    mayak-engine PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/stb
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/sol2/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/mayak-logger
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/glm
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/box2d/include
 )
 
-add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/bin ${CMAKE_BINARY_DIR}/bin
+target_link_libraries(
+    mayak-engine PUBLIC
+    SDL3
+    lua
+    box2d
 )
 
-target_link_libraries(${TARGET_NAME} PRIVATE
-    ${LIB_DIR}/liblua.a
-    ${LIB_DIR}/libSDL3.dll.a
-)
-
-# Include directories
-target_include_directories(${TARGET_NAME} PRIVATE 
-    ${SRC_DIR}
-    ${SRC_DIR}/engine
-    ${SCRIPTS_DIR}
-    ${INCLUDE_DIR}/lua
-    ${INCLUDE_DIR}/sol
-    ${INCLUDE_DIR}
-)
+add_subdirectory(game)
