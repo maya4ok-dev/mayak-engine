@@ -1,5 +1,3 @@
-// File: Scripting.h
-
 #include <sol/sol.hpp>
 #include <vector>
 #include <string>

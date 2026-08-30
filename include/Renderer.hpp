@@ -2,10 +2,6 @@
 
 #pragma once
 
-#include "SDL3/SDL.h"
-#include <vector>
-#include "DIM.hpp"
-
 namespace mayak::gfx {
     /// \brief Initializes the renderer by creating a window and renderer and by loading all textures
     ///

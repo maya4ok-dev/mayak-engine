@@ -1,21 +1,18 @@
-[submodule "external/SDL"]
-	path = external/SDL
-	url = https://github.com/libsdl-org/SDL
-[submodule "external/lua"]
-	path = external/lua
-	url = https://github.com/lua/lua
-[submodule "external/sol2"]
-	path = external/sol2
-	url = https://github.com/ThePhD/sol2
-[submodule "external/stb"]
-	path = external/stb
-	url = https://github.com/nothings/stb
-[submodule "external/mayak-logger"]
-	path = external/mayak-logger
-	url = https://github.com/maya4ok-dev/mayak-logger
-[submodule "external/glm"]
-	path = external/glm
-	url = https://github.com/g-truc/glm.git
-[submodule "external/box2d"]
-	path = external/box2d
-	url = https://github.com/erincatto/box2d.git
+[submodule "lib/sdl"]
+	path = lib/sdl
+	url = git@github.com:libsdl-org/SDL.git
+[submodule "lib/sol2"]
+	path = lib/sol2
+	url = git@github.com:ThePhD/sol2.git
+[submodule "lib/stb"]
+	path = lib/stb
+	url = git@github.com:nothings/stb.git
+[submodule "lib/glm"]
+	path = lib/glm
+	url = git@github.com:g-truc/glm.git
+[submodule "lib/lua"]
+	path = lib/lua
+	url = git@github.com:lua/lua.git
+[submodule "lib/mayak-logger"]
+	path = lib/mayak-logger
+	url = git@github.com:maya4ok-dev/mayak-logger.git

@@ -1,17 +1,13 @@
 #include "DIM.hpp"
 #include "Renderer.hpp"
 #include "Scripting.hpp"
-#include <string>
 #include <SDL3/SDL.h>
-#include "logger.hpp"
 std::vector<DIM> DIM::dims;
 SDL_Event event;
 
 int main() {
-    mayak::logger::setFileLogging(false);
-    mayak::logger::setLogLevel(mayak::logger::LogLevel::TRACE);
+//    mayak::gfx::setVSync(true);
 
-    mayak::gfx::setVSync(true);
 
     DIM world(800, 600);
 

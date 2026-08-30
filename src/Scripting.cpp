@@ -3,12 +3,9 @@
 #include "KeyMap.hpp"
 #include "Scripting.hpp"
 #include "DIM.hpp"
-#include <iostream>
 #include <filesystem>
 #include <SDL3/SDL.h>
-#include <thread>
-#include <map>
-#include "logger.hpp"
+#include <lua.h>
 
 bool VSync;
 std::vector<std::shared_ptr<sol::state>> states;
@@ -16,7 +13,7 @@ std::vector<std::shared_ptr<sol::state>> states;
 // Loads all Lua scripts from 'scripts/' and initializes their sol2 states
 void Script::Init() {
     if (!states.empty()) {
-        MAYAK_LOG_WARN("Scripts already loaded, skipping...");
+//        MAYAK_LOG_WARN("Scripts already loaded, skipping...");
         return;
     }
     // 1. Find all Lua scripts from 'scripts/'
@@ -29,11 +26,11 @@ void Script::Init() {
         std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
         if (!entry.is_regular_file() || ext != ".lua") {
-            MAYAK_LOG_WARN("Skipping non-script file: " + script);
+//            MAYAK_LOG_WARN("Skipping non-script file: " + script);
             continue;
         }
 
-        MAYAK_LOG_INFO("Loading script: " + script);
+//        MAYAK_LOG_INFO("Loading script: " + script);
 
         // 3. Creating SOL2 states
         std::shared_ptr<sol::state> state = std::make_shared<sol::state> ();
@@ -48,13 +45,10 @@ void Script::Init() {
         try {
             state->script_file(script);
             states.emplace_back(std::move(state));
-            MAYAK_LOG_INFO("Script " + script + " has been loaded successfully!");
         } catch (const sol::error& error) {
-            MAYAK_LOG_ERROR("Failed to load script " + script + ": " + std::string(error.what()));
         }
     }
 
-    MAYAK_LOG_INFO("All scripts have been loaded!");
 }
 
 // // Object vector to table convertor
@@ -148,11 +142,9 @@ void Script::RegisterBindings(sol::state& state) {
 
     // 7. Registrating objects' vector functions
     state.set_function("getObjects", []() -> std::vector<std::shared_ptr<Object>> {
-        MAYAK_LOG_DEBUG("Getting objects...");
         return DIM::GetCurrDIM().GetObjects();
     });
-    state.set_function("addObject", [](float posX, float posY, float height, float width, std::unordered_set<std::string> tags, const char * path, std::vector<AxisAlignedBoundingBox> hitbox) {
-        MAYAK_LOG_DEBUG("Adding object...");
+    state.set_function("addObject", [](float posX, float posY, float height, float width, std::vector<std::string> tags, const char * path, AxisAlignedBoundingBox hitbox) {
         DIM::GetCurrDIM().AddObject(posX, posY, height, width, tags, path, hitbox);
     });
 

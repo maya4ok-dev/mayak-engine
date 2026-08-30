@@ -1,4 +1,4 @@
-#include "Engine/DataMaps/KeyMap.hpp"
+#include "KeyMap.hpp"
 
 const std::unordered_map<std::string, SDL_Scancode> keyMap = {
     {"A", SDL_SCANCODE_A}, {"B", SDL_SCANCODE_B}, {"C", SDL_SCANCODE_C}, {"D", SDL_SCANCODE_D},
