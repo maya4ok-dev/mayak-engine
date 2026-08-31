@@ -28,7 +28,7 @@ target_link_libraries(mayak-engine PUBLIC
     lua
     sol2
     stb
-    SDL3
+    SDL3::SDL3
     glm
 )
 
