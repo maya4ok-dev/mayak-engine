@@ -18,6 +18,7 @@ target_include_directories(stb INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/lib/stb)
 add_subdirectory(lib/sol2)
 add_subdirectory(lib/sdl)
 add_subdirectory(lib/glm)
+add_subdirectory(lib/mayak-logger)
 
 # engine
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp")
@@ -30,6 +31,7 @@ target_link_libraries(mayak-engine PUBLIC
     stb
     SDL3::SDL3
     glm
+    mayak_logger_core
 )
 
 target_compile_options(mayak-engine PRIVATE -Wall -Wextra)
