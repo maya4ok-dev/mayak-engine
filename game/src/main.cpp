@@ -35,6 +35,7 @@ int main() {
 
         mayak::gfx::render();
     }
+    mayak::gfx::cleanup();
     SDL_Quit();
     return 0;
 }
