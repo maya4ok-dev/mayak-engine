@@ -137,7 +137,7 @@ void Script::RegisterBindings(sol::state& state) {
     state.set_function("getObjects", []() -> std::vector<std::shared_ptr<Object>> {
         return DIM::GetCurrDIM().GetObjects();
     });
-    state.set_function("addObject", [](float posX, float posY, float height, float width, std::vector<std::string> tags, const char * path, AxisAlignedBoundingBox hitbox) {
+    state.set_function("addObject", [](float posX, float posY, float height, float width, std::initializer_list<std::string> tags, const char * path, AxisAlignedBoundingBox hitbox) {
         DIM::GetCurrDIM().AddObject(posX, posY, height, width, tags, path, hitbox);
     });
 

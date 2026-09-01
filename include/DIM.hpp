@@ -100,8 +100,8 @@ public:
     void SetHeight(int h) { height = h; }
     void SetWidth(int w) { width = w; }
     static void SetCurrDIM(DIM *dim) { currDIM = dim; }
-    std::shared_ptr<Object> AddObject(float x, float y, float objHeight, float objWidth, std::vector<std::string> tagsVec, const char * path, AxisAlignedBoundingBox hitbox) { 
-        std::unordered_set<std::string> tags(tagsVec.begin(), tagsVec.end());
+    std::shared_ptr<Object> AddObject(float x, float y, float objHeight, float objWidth, std::initializer_list<std::string> tagList, const char * path, AxisAlignedBoundingBox hitbox) { 
+        std::unordered_set<std::string> tags = tagList;
         auto obj = std::make_shared<Object>(x, y, objHeight, objWidth, std::move(tags), path, hitbox);
         objects.emplace_back(obj);
         return obj;
