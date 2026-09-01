@@ -49,7 +49,7 @@ struct Object{
     AxisAlignedBoundingBox hitbox;
 
     Object(float posX, float posY, float height, float width, std::unordered_set<std::string> tags, const char* path, AxisAlignedBoundingBox hitbox)
-    : posX(posX), posY(posY), height(height), width(width), tags(tags), path(path), hitbox(hitbox) {}
+    : posX(posX), posY(posY), height(height), width(width), path(path), tags(tags), hitbox(hitbox) {}
 
     ~Object() {}
 
