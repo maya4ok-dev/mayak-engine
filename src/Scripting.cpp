@@ -3,7 +3,10 @@
 #include "KeyMap.hpp"
 #include "Scripting.hpp"
 #include "DIM.hpp"
+#include "Logger.hpp"
+
 #include <filesystem>
+
 #include <SDL3/SDL.h>
 #include <lua.h>
 
@@ -13,7 +16,8 @@ std::vector<std::shared_ptr<sol::state>> states;
 // Loads all Lua scripts from 'scripts/' and initializes their sol2 states
 void Script::Init() {
     if (!states.empty()) {
-//        MAYAK_LOG_WARN("Scripts already loaded, skipping...");
+        mlogger.setLevel(info);
+        mlogger << "[scripting] already initialized!" << mayak::logger::core::flush;
         return;
     }
     // 1. Find all Lua scripts from 'scripts/'
@@ -26,13 +30,15 @@ void Script::Init() {
         std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
         if (!entry.is_regular_file() || ext != ".lua") {
-//            MAYAK_LOG_WARN("Skipping non-script file: " + script);
+            mlogger.setLevel(info);
+            mlogger << "[scripting] skipping non-lua file: " << script << mayak::logger::core::flush;
             continue;
         }
 
-//        MAYAK_LOG_INFO("Loading script: " + script);
+        mlogger.setLevel(info);
+        mlogger << "[scripting] loading script: " << script << mayak::logger::core::flush;
 
-        // 3. Creating SOL2 states
+        // 3. Creating SOL2 state
         std::shared_ptr<sol::state> state = std::make_shared<sol::state> ();
 
         // 4. Opening LUA libraries
@@ -41,26 +47,12 @@ void Script::Init() {
         // 5. Register bindings method
         Script::RegisterBindings(*state);
 
-        // 6. Load .lua file and catch errors
-        try {
-            state->script_file(script);
-            states.emplace_back(std::move(state));
-        } catch (const sol::error& error) {
-        }
+        // 6. Load .lua file
+        state->script_file(script);
+        states.emplace_back(std::move(state));
     }
 
 }
-
-// // Object vector to table convertor
-// sol::table ObjectsToTable(sol::state& state, const std::vector<Object>&objects) {
-//     Logging::info("Convert Object vector to LUA table...");
-//     sol::table objectTable = state.create_table();
-//     for(size_t i = 0; i < objects.size(); i++) {
-//         Logging::trace("Adding object objects[" + std::to_string(i) + "] to SOL2 table");
-//         objectTable[i + 1] = objects[i];
-//     }
-//     return objectTable;
-// }
 
 // Registrating additions to SOL2 state
 void Script::RegisterBindings(sol::state& state) {
@@ -86,9 +78,10 @@ void Script::RegisterBindings(sol::state& state) {
         sol::property(
             &Object::GetPath, &Object::SetPath
         ),
-        "hasTag", &Object::HasTag,
-        "addTag", &Object::AddTag,
-        "removeTag", &Object::RemoveTag
+        "tags",
+        sol::property([](Object& obj) {
+            return sol::as_table(obj.tags);
+        })
     );
 
     // 2. Registrating DIM (dimension) usertype
