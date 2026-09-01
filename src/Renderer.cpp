@@ -78,9 +78,6 @@ namespace mayak::gfx {
             }
         }
 
-        mlogger.setLevel(info);
-        mlogger << "initialized SDL successfully" << logger::core::flush;
-
         return true;
     }
 
