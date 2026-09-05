@@ -15,8 +15,9 @@ target_include_directories(lua PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lib/lua" "${C
 add_library(stb INTERFACE)
 target_include_directories(stb INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/lib/stb)
 
+find_package(SDL3 REQUIRED)
+
 add_subdirectory(lib/sol2)
-add_subdirectory(lib/sdl)
 add_subdirectory(lib/glm)
 add_subdirectory(lib/mayak-logger)
 
