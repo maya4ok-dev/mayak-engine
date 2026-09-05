@@ -1,6 +1,6 @@
 // File: ScriptEngine.cpp
 
-#include "key-map.hpp"
+#include "keymap.hpp"
 #include "scripting.hpp"
 #include "dimension.hpp"
 #include "logger.hpp"
