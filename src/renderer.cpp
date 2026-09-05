@@ -1,7 +1,9 @@
 // File: Renderer.cpp
 
+#include <SDL3/SDL.h>
+
 #include "renderer.hpp"
-#include "dimension.hpp"
+#include "world.hpp"
 #include "logger.hpp"
 
 #include <map>
@@ -35,7 +37,7 @@ namespace mayak::gfx {
         }
 
         // Create SDL window
-        window = SDL_CreateWindow(windowName, DIM::GetCurrDIM().GetWidth(), DIM::GetCurrDIM().GetHeight(), 0);
+        window = SDL_CreateWindow(windowName, engine::world::active()->width, engine::world::active()->height, 0);
         if (window == nullptr) {
             mlogger.setLevel(error);
             mlogger << "failed to create window: " << SDL_GetError() << logger::core::flush;
@@ -59,7 +61,7 @@ namespace mayak::gfx {
         mlogger.setLevel(info);
         mlogger << "set vsync to " << (VSync ? "on" : "off") << logger::core::flush;
 
-        for (const auto& obj : *DIM::GetCurrDIM().GetObjects()) {
+        for (const auto& obj : *engine::world::active()->getObjects()) {
             const std::string& path = obj.GetPath();
             if (textureCache.find(path) == textureCache.end()) {
                 int width, height, channels;
@@ -91,7 +93,7 @@ namespace mayak::gfx {
         SDL_RenderClear(renderer);
 
         // Render every object
-        for (const auto &obj : *DIM::GetCurrDIM().GetObjects()) {
+        for (const auto &obj : *engine::world::active()->getObjects()) {
             SDL_Texture* texture = textureCache[obj.GetPath()].texture;
             if (!texture) {
                 mlogger.setLevel(error);

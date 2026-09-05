@@ -1,11 +1,10 @@
 #include <SDL3/SDL.h>
 
-#include "dimension.hpp"
+#include "world.hpp"
 #include "renderer.hpp"
 #include "scripting.hpp"
 #include "logger.hpp"
 
-std::vector<DIM> DIM::dims;
 SDL_Event event;
 
 int main() {
@@ -13,14 +12,13 @@ int main() {
 
     mayak::gfx::setVSync(true);
 
+    engine::World world(800, 600);
 
-    DIM world(800, 600);
-
-    world.AddObject(180, 180, 40, 40, {"player"}, "assets/imgs/pancake.bmp", AxisAlignedBoundingBox(glm::vec2(0, 0), glm::vec2(40, 40)));
-    world.AddObject(400, 200, 40, 40, {"rotatable"}, "assets/imgs/pancake.bmp", AxisAlignedBoundingBox(glm::vec2(0, 0), glm::vec2(40, 40)));
-    world.AddObject(0, 400, 200, 800, {"ground"}, "assets/imgs/ground.png", AxisAlignedBoundingBox(glm::vec2(0,0), glm::vec2(200, 800)));
+    world.addObject(180, 180, 40, 40, {"player"}, "assets/imgs/pancake.bmp", AxisAlignedBoundingBox(glm::vec2(0, 0), glm::vec2(40, 40)));
+    world.addObject(400, 200, 40, 40, {"rotatable"}, "assets/imgs/pancake.bmp", AxisAlignedBoundingBox(glm::vec2(0, 0), glm::vec2(40, 40)));
+    world.addObject(0, 400, 200, 800, {"ground"}, "assets/imgs/ground.png", AxisAlignedBoundingBox(glm::vec2(0,0), glm::vec2(200, 800)));
     
-    DIM::SetCurrDIM(&world);
+    engine::world::active(world);
 
     Script::Init();
 

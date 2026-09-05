@@ -1,4 +1,4 @@
-local objects = getObjects()
+local objects = world.active():getObjects()
 local time = 0
 local startposes = {}
 

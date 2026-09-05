@@ -1,4 +1,4 @@
-local objects = getObjects()
+local objects = world.active():getObjects()
 local speed = 250
 
 function update(dt)

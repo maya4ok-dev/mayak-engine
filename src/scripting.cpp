@@ -2,13 +2,14 @@
 
 #include "keymap.hpp"
 #include "scripting.hpp"
-#include "dimension.hpp"
+#include "world.hpp"
 #include "logger.hpp"
 
 #include <filesystem>
 
 #include <SDL3/SDL.h>
 #include <lua.h>
+#include <sol/property.hpp>
 
 bool VSync;
 std::vector<std::shared_ptr<sol::state>> states;
@@ -40,16 +41,22 @@ void Script::Init() {
 
         // 3. Creating SOL2 state
         std::shared_ptr<sol::state> state = std::make_shared<sol::state> ();
-
-        // 4. Opening LUA libraries
+// 4. Opening LUA libraries
         state->open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::os);
 
         // 5. Register bindings method
         Script::RegisterBindings(*state);
 
         // 6. Load .lua file
-        state->script_file(script);
-        states.emplace_back(std::move(state));
+        try {
+            state->script_file(script);
+            states.emplace_back(std::move(state));
+        }
+        catch (const sol::error& e) {
+            mlogger.setLevel(error);
+            mlogger << "error while loading script " << script << ": " << e.what() << mayak::logger::core::flush;
+        }
+
     }
 
 }
@@ -84,20 +91,35 @@ void Script::RegisterBindings(sol::state& state) {
         })
     );
 
-    // 2. Registrating DIM (dimension) usertype
-    state.new_usertype<DIM>("DIM",
+    // World
+    state.new_usertype<engine::World>("World",
         "width",
         sol::readonly(
-            &DIM::GetWidth
+            &engine::World::width
         ),
         "height",
         sol::readonly(
-            &DIM::GetHeight
+            &engine::World::height
         ),
         "addObject",
-        &DIM::AddObject
+        &engine::World::addObject,
+        "destroyObject",
+        &engine::World::destroyObject,
+        "getObjects",
+        &engine::World::getObjects
     );
-    
+
+    auto world = state.create_named_table("world");
+
+    world.set_function("add", engine::world::add);
+    world.set_function("destroy", engine::world::destroy);
+    world.set_function("get", engine::world::get);
+
+    world["active"] = sol::property(
+        static_cast<engine::World* (*)()>(engine::world::active),
+        static_cast<void (*)(engine::World&)>(engine::world::active)
+    );
+
     // 3. Register AxisAlignedBoundingBox usertype (hitbox)
     state.new_usertype<AxisAlignedBoundingBox>("AxisAlignedBoundingBox",
         "lowerLeftX",
@@ -128,19 +150,6 @@ void Script::RegisterBindings(sol::state& state) {
         const bool* keyboardState = SDL_GetKeyboardState(nullptr);
         return keyboardState[scancode] != 0;
     });
-
-    // 6. Registrating currDIM (current dim) funtions
-    state.set_function("getCurrDIM", &DIM::GetCurrDIM);
-    state.set_function("setCurrDIM", &DIM::SetCurrDIM);
-
-    // 7. Registrating objects' vector functions
-    state.set_function("getObjects", []() -> std::vector<Object>* {
-        return DIM::GetCurrDIM().GetObjects();
-    });
-    state.set_function("addObject", [](float posX, float posY, float height, float width, std::initializer_list<std::string> tags, const char * path, AxisAlignedBoundingBox hitbox) {
-        DIM::GetCurrDIM().AddObject(posX, posY, height, width, tags, path, hitbox);
-    });
-
 }
 
 // A set of static variables that are used to work with the tick system
