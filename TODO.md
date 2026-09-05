@@ -3,3 +3,5 @@
     - because removing the old logger caused the whole texture loading block to become the `if` body
 [ ] load only main.lua file, not all in the scripts/ directory
 [ ] add setup() function to scripts
+[ ] implement a mini ecs using polymorphism
+[ ] look up if SDL_GetScancodeFromName can be used instad of keyMap
