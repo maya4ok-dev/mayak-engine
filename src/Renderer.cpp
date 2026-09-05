@@ -77,6 +77,8 @@ namespace mayak::gfx {
                 textureCache[path] = {texture, width, height};
             }
         }
+        
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
         return true;
     }
@@ -88,7 +90,6 @@ namespace mayak::gfx {
             return;
         }
 
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
 
         // Render every object
