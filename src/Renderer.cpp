@@ -31,7 +31,7 @@ namespace mayak::gfx {
     bool init(const char* windowName) {
         // Initialize SDL
         if(!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-            mlogger.setLevel(info);
+            mlogger.setLevel(error);
             mlogger << "failed to initialize sdl: " << SDL_GetError() << logger::core::flush;
             return false;
         }
@@ -39,7 +39,7 @@ namespace mayak::gfx {
         // Create SDL window
         window = SDL_CreateWindow(windowName, DIM::GetCurrDIM().GetWidth(), DIM::GetCurrDIM().GetHeight(), 0);
         if (window == nullptr) {
-            mlogger.setLevel(info);
+            mlogger.setLevel(error);
             mlogger << "failed to create window: " << SDL_GetError() << logger::core::flush;
             return false;
         }
@@ -47,14 +47,14 @@ namespace mayak::gfx {
         // Create SDL renderer
         renderer = SDL_CreateRenderer(window, nullptr); // nullptr is the default renderer
         if (renderer == nullptr) { // If the render wasn't created
-            mlogger.setLevel(info);
+            mlogger.setLevel(error);
             mlogger << "failed to create renderer: " << SDL_GetError() << logger::core::flush;
             return false;
         }
 
         // Enable VSync
         if(!SDL_SetRenderVSync(renderer, VSync)) {
-            mlogger.setLevel(info);
+            mlogger.setLevel(error);
             mlogger << "failed to set VSync: " << SDL_GetError() << logger::core::flush;
         }
 
@@ -67,7 +67,7 @@ namespace mayak::gfx {
                 int width, height, channels;
                 unsigned char* pixels = stbi_load(obj->GetPath().c_str(), &width, &height, &channels, 4);
                 if (!pixels) {
-                    mlogger.setLevel(info);
+                    mlogger.setLevel(error);
                     mlogger << "failed to load textures: " << stbi_failure_reason() << logger::core::flush;
                     return false;
                 }
@@ -83,7 +83,8 @@ namespace mayak::gfx {
 
     void render() {
         if (!isInitialized()) {
-//            MAYAK_LOG_WARN("Renderer is not initialized");
+            mlogger.setLevel(error);
+            mlogger << "renderer is not initialized" << logger::core::flush;
             return;
         }
 
@@ -94,14 +95,16 @@ namespace mayak::gfx {
         for (const auto& obj : DIM::GetCurrDIM().GetObjects()) {
             SDL_Texture* texture = textureCache[obj->GetPath()].texture;
             if (!texture) {
-//                MAYAK_LOG_ERROR("Texture not found:" + obj->GetPath());
+                mlogger.setLevel(error);
+                mlogger << "texture is not initialized" << logger::core::flush;
                 return;
             }
 
             SDL_FRect rect = {obj->GetPosX(), obj->GetPosY(), obj->GetWidth(), obj->GetHeight()};
 
             if (!SDL_RenderTexture(renderer, texture, nullptr, &rect)) {
-//                MAYAK_LOG_FATAL("Failed to render texture:" + std::string(SDL_GetError()));
+                mlogger.setLevel(error);
+                mlogger << "failed to render a texture: " << SDL_GetError() << logger::core::flush;
                 return;
             }
         }
@@ -110,8 +113,6 @@ namespace mayak::gfx {
     }
 
     void cleanup() {
-//        MAYAK_LOG_INFO("Cleaning up...");
-        
         for (auto& pair : textureCache) {
             SDL_DestroyTexture(pair.second.texture);
         }
@@ -123,8 +124,6 @@ namespace mayak::gfx {
         // Clear pointers
         renderer = nullptr;
         window = nullptr;
-        
-//        MAYAK_LOG_INFO("Cleanup complete!");
     }
 
     bool isInitialized() noexcept {
@@ -138,7 +137,6 @@ namespace mayak::gfx {
     void setVSync(bool value) {
         VSync = value;
         SDL_SetRenderVSync(renderer, VSync);
-//        MAYAK_LOG_DEBUG("VSync is " + std::to_string(VSync));
     }
 }
 

@@ -22,9 +22,11 @@ int main() {
     DIM::SetCurrDIM(&world);
 
     Script::Init();
-    bool gfx_init_success = mayak::gfx::init("Window");
-    mlogger.setLevel(info);
-    mlogger << "sdl initialization was " << (gfx_init_success ? "successful" : "unsuccessful") << mayak::logger::core::flush;
+
+    if (!mayak::gfx::init("Window")) {
+        mlogger.setLevel(error);
+        mlogger << "failed to initialize SDL!" << mayak::logger::core::flush;
+    }
 
     bool running = true;
     while (running) {
