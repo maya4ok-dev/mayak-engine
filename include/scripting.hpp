@@ -1,3 +1,5 @@
+#pragma once
+
 #include <sol/sol.hpp>
 #include <vector>
 #include <string>

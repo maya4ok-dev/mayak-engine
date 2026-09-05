@@ -1,9 +1,9 @@
 // File: ScriptEngine.cpp
 
-#include "KeyMap.hpp"
-#include "Scripting.hpp"
-#include "DIM.hpp"
-#include "Logger.hpp"
+#include "key-map.hpp"
+#include "scripting.hpp"
+#include "dimension.hpp"
+#include "logger.hpp"
 
 #include <filesystem>
 
@@ -134,7 +134,7 @@ void Script::RegisterBindings(sol::state& state) {
     state.set_function("setCurrDIM", &DIM::SetCurrDIM);
 
     // 7. Registrating objects' vector functions
-    state.set_function("getObjects", []() -> std::vector<std::shared_ptr<Object>> {
+    state.set_function("getObjects", []() -> std::vector<Object>* {
         return DIM::GetCurrDIM().GetObjects();
     });
     state.set_function("addObject", [](float posX, float posY, float height, float width, std::initializer_list<std::string> tags, const char * path, AxisAlignedBoundingBox hitbox) {

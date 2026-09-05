@@ -1,6 +1,5 @@
 #pragma once
 
-#include "mayak/logger/core/state.hpp"
 #include <mayak/logger.hpp>
 
 static inline mayak::logger::core::Level error("error", 100);

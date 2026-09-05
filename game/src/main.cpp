@@ -1,9 +1,10 @@
-#include "DIM.hpp"
-#include "Renderer.hpp"
-#include "Scripting.hpp"
 #include <SDL3/SDL.h>
-#include "Logger.hpp"
-#include "mayak/logger/core/logger.hpp"
+
+#include "dimension.hpp"
+#include "renderer.hpp"
+#include "scripting.hpp"
+#include "logger.hpp"
+
 std::vector<DIM> DIM::dims;
 SDL_Event event;
 

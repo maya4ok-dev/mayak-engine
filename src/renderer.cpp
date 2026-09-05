@@ -1,10 +1,8 @@
 // File: Renderer.cpp
 
-#include "Renderer.hpp"
-#include "DIM.hpp"
-#include "Scripting.hpp"
-#include "Logger.hpp"
-#include "mayak/logger/core/logger.hpp"
+#include "renderer.hpp"
+#include "dimension.hpp"
+#include "logger.hpp"
 
 #include <map>
 #include <string>
@@ -61,11 +59,11 @@ namespace mayak::gfx {
         mlogger.setLevel(info);
         mlogger << "set vsync to " << (VSync ? "on" : "off") << logger::core::flush;
 
-        for (const auto& obj : DIM::GetCurrDIM().GetObjects()) {
-            const std::string& path = obj->GetPath();
+        for (const auto& obj : *DIM::GetCurrDIM().GetObjects()) {
+            const std::string& path = obj.GetPath();
             if (textureCache.find(path) == textureCache.end()) {
                 int width, height, channels;
-                unsigned char* pixels = stbi_load(obj->GetPath().c_str(), &width, &height, &channels, 4);
+                unsigned char* pixels = stbi_load(obj.GetPath().c_str(), &width, &height, &channels, 4);
                 if (!pixels) {
                     mlogger.setLevel(error);
                     mlogger << "failed to load textures: " << stbi_failure_reason() << logger::core::flush;
@@ -93,15 +91,15 @@ namespace mayak::gfx {
         SDL_RenderClear(renderer);
 
         // Render every object
-        for (const auto& obj : DIM::GetCurrDIM().GetObjects()) {
-            SDL_Texture* texture = textureCache[obj->GetPath()].texture;
+        for (const auto &obj : *DIM::GetCurrDIM().GetObjects()) {
+            SDL_Texture* texture = textureCache[obj.GetPath()].texture;
             if (!texture) {
                 mlogger.setLevel(error);
                 mlogger << "texture is not initialized" << logger::core::flush;
                 return;
             }
 
-            SDL_FRect rect = {obj->GetPosX(), obj->GetPosY(), obj->GetWidth(), obj->GetHeight()};
+            SDL_FRect rect = {obj.GetPosX(), obj.GetPosY(), obj.GetWidth(), obj.GetHeight()};
 
             if (!SDL_RenderTexture(renderer, texture, nullptr, &rect)) {
                 mlogger.setLevel(error);
