@@ -7,62 +7,13 @@
 
 #include <filesystem>
 
+#include <sol/sol.hpp>
 #include <SDL3/SDL.h>
-#include <lua.h>
-#include <sol/property.hpp>
 
-bool VSync;
 std::vector<std::shared_ptr<sol::state>> states;
 
-// Loads all Lua scripts from 'scripts/' and initializes their sol2 states
-void Script::Init() {
-    if (!states.empty()) {
-        mlogger.setLevel(info);
-        mlogger << "[scripting] already initialized!" << mayak::logger::core::flush;
-        return;
-    }
-    // 1. Find all Lua scripts from 'scripts/'
-    for (const auto& entry : std::filesystem::directory_iterator("scripts")) {
-
-        // 2. Get script path from entry and check for script
-        std::string script = entry.path().string();
-
-        std::string ext = entry.path().extension().string();
-        std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-
-        if (!entry.is_regular_file() || ext != ".lua") {
-            mlogger.setLevel(info);
-            mlogger << "[scripting] skipping non-lua file: " << script << mayak::logger::core::flush;
-            continue;
-        }
-
-        mlogger.setLevel(info);
-        mlogger << "[scripting] loading script: " << script << mayak::logger::core::flush;
-
-        // 3. Creating SOL2 state
-        std::shared_ptr<sol::state> state = std::make_shared<sol::state> ();
-// 4. Opening LUA libraries
-        state->open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::os);
-
-        // 5. Register bindings method
-        Script::RegisterBindings(*state);
-
-        // 6. Load .lua file
-        try {
-            state->script_file(script);
-            states.emplace_back(std::move(state));
-        }
-        catch (const sol::error& e) {
-            mlogger.setLevel(error);
-            mlogger << "error while loading script " << script << ": " << e.what() << mayak::logger::core::flush;
-        }
-
-    }
-
-}
-
-// Registrating additions to SOL2 state
-void Script::RegisterBindings(sol::state& state) {
+// bind engine's api
+void bind_api(sol::state& state) {
     // 1. Register Object usertype
     state.new_usertype<Object>("Object",
         "posX",
@@ -152,6 +103,55 @@ void Script::RegisterBindings(sol::state& state) {
     });
 }
 
+// Loads all Lua scripts from 'scripts/' and initializes their sol2 states
+void Script::Init() {
+    if (!states.empty()) {
+        mlogger.setLevel(info);
+        mlogger << "[scripting] already initialized!" << mayak::logger::core::flush;
+        return;
+    }
+    // 1. Find all Lua scripts from 'scripts/'
+    for (const auto& entry : std::filesystem::directory_iterator("scripts")) {
+
+        // 2. Get script path from entry and check for script
+        std::string script = entry.path().string();
+
+        std::string ext = entry.path().extension().string();
+        std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+        if (!entry.is_regular_file() || ext != ".lua") {
+            mlogger.setLevel(info);
+            mlogger << "[scripting] skipping non-lua file: " << script << mayak::logger::core::flush;
+            continue;
+        }
+
+        mlogger.setLevel(info);
+        mlogger << "[scripting] loading script: " << script << mayak::logger::core::flush;
+
+        // 3. Creating SOL2 state
+        std::shared_ptr<sol::state> state = std::make_shared<sol::state> ();
+
+        // 4. Opening LUA libraries
+        state->open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::os);
+
+        // 5. Register bindings method
+        bind_api(*state);
+
+        // 6. Load .lua file
+        try {
+            state->script_file(script);
+            states.emplace_back(std::move(state));
+        }
+        catch (const sol::error& e) {
+            mlogger.setLevel(error);
+            mlogger << "error while loading script " << script << ": " << e.what() << mayak::logger::core::flush;
+        }
+
+    }
+
+}
+
+
 // A set of static variables that are used to work with the tick system
 static float tickAccumulator = 0.0f;
 static const int TICKS_PER_SECOND = 60;
@@ -202,8 +202,4 @@ void Script::Run() {
 
     // 7. Save current time as last tick time
     lastTickTime = currTime;
-}
-
-void Script::Clear() {
-    states.clear();
 }
