@@ -7,9 +7,9 @@
     - [x] entity
     - [ ] component storage
         - [x] add method
-        - [x] destroy method
+        - [ ] destroy method
         - [ ] has method
-        - [ ] get method
+        - [x] get method
 - [ ] look up if `SDL_GetScancodeFromName` can be used instad of keyMap
 - [x] replace old `DIM` with `World` and make it less cringy
 - [ ] wrap up every engine component into `engine::` namespace
