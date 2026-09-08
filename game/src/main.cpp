@@ -20,19 +20,29 @@ int main() {
     
     engine::world::active(world);
 
-    Script::Init();
+    engine::Scripting scripting;
 
     if (!mayak::gfx::init("Window")) {
-        mlogger.setLevel(error);
-        mlogger << "failed to initialize SDL!" << mayak::logger::core::flush;
+        mlogger.setLevel(error) << "failed to initialize SDL!" << mayak::logger::core::flush;
     }
 
+    const auto freq = SDL_GetPerformanceFrequency();
+    auto last = SDL_GetPerformanceCounter();
+
+    SDL_Event event;
     bool running = true;
     while (running) {
-        Script::Run();
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED) running = false;
         }
+
+        const auto now = SDL_GetPerformanceCounter();
+        const double dt = static_cast<double>(now - last) / freq;
+
+        last = now;
+
+        SDL_PumpEvents();
+        scripting(dt);
 
         mayak::gfx::render();
     }

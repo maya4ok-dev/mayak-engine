@@ -9,7 +9,7 @@ for i, object in ipairs(objects) do
     }
 end
 
-function update(dt)
+return function(dt)
     time = time + dt
 
     for obj_i, object in ipairs(objects) do

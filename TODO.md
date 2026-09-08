@@ -1,8 +1,8 @@
-- [x] integrate mayak::logger instead of old one
+- [x] integrate `mayak::logger` instead of old one
 - [x] figure out why graphics don't work
     - because removing the old logger caused the whole texture loading block to become the `if` body
-- [ ] load only main.lua file, not all in the scripts/ directory
-- [ ] add setup() function to scripts
+- [x] load only initial file, not the whole `scripts/` directory
+- [ ] add `setup()` function to scripts
 - [ ] implement a basic ecs
     - [x] entity
     - [ ] component storage
@@ -10,14 +10,14 @@
         - [x] destroy method
         - [ ] has method
         - [ ] get method
-- [ ] look up if SDL_GetScancodeFromName can be used instad of keyMap
-- [x] replace old DIM with World and make it less cringy
-- [ ] wrap up every engine component into engine:: namespace
+- [ ] look up if `SDL_GetScancodeFromName` can be used instad of keyMap
+- [x] replace old `DIM` with `World` and make it less cringy
+- [ ] wrap up every engine component into `engine::` namespace
 - [ ] make a mega premium ultra production-ready sample that doesn't make me cry
 - [ ] implement camera
-    - [ ] make the World endless or at least configurable
+    - [ ] make the `World` endless or at least configurable
 - [ ] rework scripting system
     - [x] clean up the existing one
-    - [ ] wrap it all in a class
+    - [x] wrap it all in a class
     - [ ] implement a method for users to bind usertypes and stuff
-
+- [ ] avoid calling `state["update"]` every frame

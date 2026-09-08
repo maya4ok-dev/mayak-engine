@@ -1,7 +1,7 @@
 local objects = world.active():getObjects()
 local speed = 250
 
-function update(dt)
+return function(dt)
     for _, object in ipairs(objects) do
         for _, tag in ipairs(object.tags) do
 

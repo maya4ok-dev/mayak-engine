@@ -1,10 +1,8 @@
-local hello = require("scripts.world-greeter")
-
 local greeted = false
 
-function update(dt) 
+return function(dt) 
     if not greeted then 
-        hello()
+        print("Hello, World!")
         greeted = true
     end
 end
