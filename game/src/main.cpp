@@ -1,11 +1,12 @@
 #include <SDL3/SDL.h>
+#include <sol/sol.hpp>
 
 #include "world.hpp"
 #include "renderer.hpp"
 #include "scripting.hpp"
 #include "logger.hpp"
+#include "ecs.hpp"
 
-SDL_Event event;
 struct Texture {
     std::string path;
 };
@@ -20,6 +21,14 @@ struct Controller {
 
 int main() {
     init_logger();
+
+    Entity player;
+    player.components.add<Texture>(Texture{"assets/player.png"});
+    player.components.add<Transformer>(Transformer{100, 100, 100, 100});
+    player.components.add<Controller>(Controller{300});
+
+    Texture* texture = player.components.get<Texture>();
+    mlogger.setLevel(info) << "player's texture: " << texture->path << mayak::logger::core::flush;
 
     mayak::gfx::setVSync(true);
 
