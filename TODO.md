@@ -10,7 +10,8 @@
         - [ ] destroy method
         - [ ] has method
         - [x] get method
-- [ ] look up if `SDL_GetScancodeFromName` can be used instad of keyMap
+- [x] look up if `SDL_GetScancodeFromName` can be used instad of keyMap
+    - replaced
 - [x] replace old `DIM` with `World` and make it less cringy
 - [ ] wrap up every engine component into `engine::` namespace
 - [ ] make a mega premium ultra production-ready sample that doesn't make me cry

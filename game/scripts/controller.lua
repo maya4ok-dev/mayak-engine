@@ -7,16 +7,16 @@ return function(dt)
 
             if tag ~= "player" then goto continue end
                 
-            if isKeyPressed(KEY_UP) then
+            if isKeyPressed("UP") then
                 object.posY = object.posY - speed * dt
             end
-            if isKeyPressed(KEY_DOWN) then
+            if isKeyPressed("DOWN") then
                 object.posY = object.posY + speed * dt
             end
-            if isKeyPressed(KEY_LEFT) then
+            if isKeyPressed("LEFT") then
                 object.posX = object.posX - speed * dt
             end
-            if isKeyPressed(KEY_RIGHT) then
+            if isKeyPressed("RIGHT") then
                 object.posX = object.posX + speed * dt
             end
 

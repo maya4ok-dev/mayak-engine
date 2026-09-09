@@ -1,8 +1,4 @@
-// File: ScriptEngine.cpp
-
 #include "scripting.hpp"
-#include "keymap.hpp"
-#include "mayak/logger/core/logger.hpp"
 #include "world.hpp"
 #include "aabb.hpp"
 #include "object.hpp"
@@ -90,15 +86,8 @@ void bind_api(sol::state& state) {
         )
     );
 
-    // 4. Registrating key scancodes
-    for (const auto& [name, code] : keyMap) {
-        state["KEY_" + name] = code;
-    }
-    
-    // 5. Registrating check the keypress function
-    state.set_function("isKeyPressed", [](SDL_Scancode scancode) {
-        const bool* keyboardState = SDL_GetKeyboardState(nullptr);
-        return keyboardState[scancode] != 0;
+    state.set_function("isKeyPressed", [](const char *name) {
+        return SDL_GetKeyboardState(nullptr)[SDL_GetScancodeFromName(name)] != 0;
     });
 }
 
