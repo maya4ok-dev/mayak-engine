@@ -16,8 +16,8 @@
 - [ ] make a mega premium ultra production-ready sample that doesn't make me cry
 - [ ] implement camera
     - [ ] make the `World` endless or at least configurable
-- [ ] rework scripting system
+- [x] rework scripting system
     - [x] clean up the existing one
     - [x] wrap it all in a class
-    - [ ] implement a method for users to bind usertypes and stuff
+    - [x] implement a method for users to bind usertypes and stuff
 - [ ] avoid calling `state["update"]` every frame
