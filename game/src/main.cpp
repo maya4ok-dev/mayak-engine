@@ -6,6 +6,17 @@
 #include "logger.hpp"
 
 SDL_Event event;
+struct Texture {
+    std::string path;
+};
+
+struct Transformer {
+    int x,y,w,h;
+};
+
+struct Controller {
+    int speed;
+};
 
 int main() {
     init_logger();
@@ -21,6 +32,24 @@ int main() {
     engine::world::active(world);
 
     engine::Scripting scripting;
+
+    scripting.bind<Texture>("Texture",
+        sol::constructors<Texture()>(),
+        "path", &Texture::path
+    );
+
+    scripting.bind<Transformer>("Transformer",
+        sol::constructors<Transformer()>(),
+        "x", &Transformer::x,
+        "y", &Transformer::y,
+        "w", &Transformer::w,
+        "h", &Transformer::h
+    );
+
+    scripting.bind<Controller>("Controller",
+        sol::constructors<Controller()>(),
+        "speed", &Controller::speed
+    );
 
     if (!mayak::gfx::init("Window")) {
         mlogger.setLevel(error) << "failed to initialize SDL!" << mayak::logger::core::flush;

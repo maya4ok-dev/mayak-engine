@@ -124,3 +124,4 @@ void engine::Scripting::operator()(double dt) {
         update(dt);
     }
 }
+
