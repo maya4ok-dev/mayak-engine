@@ -10,6 +10,14 @@
         - [ ] destroy method
         - [ ] has method
         - [x] get method
+    - [ ] lua component storage bridge
+        - necessary because you can't bind ComponentStorage directly due to the templates
+        - [x] struct's api
+        - [x] implement getters
+        - [ ] implement registration
+        - [ ] scripting bindings
+            - [ ] global register api
+            - [x] struct bind
 - [x] look up if `SDL_GetScancodeFromName` can be used instad of keyMap
     - replaced
 - [x] replace old `DIM` with `World` and make it less cringy

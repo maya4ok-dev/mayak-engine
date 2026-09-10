@@ -3,6 +3,7 @@
 #include "aabb.hpp"
 #include "object.hpp"
 #include "logger.hpp"
+#include "ecs-lua-bridge.hpp"
 
 #include <sol/sol.hpp>
 #include <SDL3/SDL.h>
@@ -36,6 +37,12 @@ void bind_api(sol::state& state) {
             return sol::as_table(obj.tags);
         })
     );
+    state.new_usertype<engine::scripting::ComponentBridge>("ComponentBridge",
+        "add", &engine::scripting::ComponentBridge::add,
+        "get", &engine::scripting::ComponentBridge::get
+    );
+
+    state.new_usertype<Entity>("Entity", "components", &Entity::components);
 
     // World
     state.new_usertype<engine::World>("World",
