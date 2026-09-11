@@ -15,8 +15,9 @@
         - [x] struct's api
         - [x] implement getters
         - [ ] implement registration
-        - [ ] scripting bindings
-            - [ ] global register api
+        - [x] scripting bindings
+            - [x] global register api
+                - made the whole bridge global because there's no need in class for now
             - [x] struct bind
 - [x] look up if `SDL_GetScancodeFromName` can be used instad of keyMap
     - replaced
