@@ -32,3 +32,5 @@
     - [x] wrap it all in a class
     - [x] implement a method for users to bind usertypes and stuff
 - [ ] avoid calling `state["update"]` every frame
+- [ ] make a bridge between world and renderer to isolate them
+- [ ] abstract renderer
