@@ -2,7 +2,20 @@
 
 #pragma once
 
+#include "scripting.hpp"
+
 namespace mayak::gfx {
+
+    struct Texture {
+        const char *path;
+    };
+
+    struct Transform {
+        float x, y, w, h;
+    };
+
+    void register_components(engine::Scripting& scripting);
+
     /// \brief Initializes the renderer by creating a window and renderer and by loading all textures
     ///
     /// \param name The name of the window

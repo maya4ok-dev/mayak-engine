@@ -1,65 +1,58 @@
 #include <SDL3/SDL.h>
 #include <sol/sol.hpp>
 
+#include "mayak/logger/core/logger.hpp"
 #include "world.hpp"
 #include "renderer.hpp"
 #include "scripting.hpp"
 #include "logger.hpp"
 #include "ecs.hpp"
-
-struct Texture {
-    std::string path;
-};
-
-struct Transformer {
-    int x,y,w,h;
-};
+#include "ecs-lua-bridge.hpp"
 
 struct Controller {
     int speed;
 };
 
+struct Name {
+    std::string name;
+};
+
 int main() {
     init_logger();
 
-    Entity player;
-    player.components.add<Texture>(Texture{"assets/player.png"});
-    player.components.add<Transformer>(Transformer{100, 100, 100, 100});
-    player.components.add<Controller>(Controller{300});
-
-    Texture* texture = player.components.get<Texture>();
-    mlogger.setLevel(info) << "player's texture: " << texture->path << mayak::logger::core::flush;
-
-    mayak::gfx::setVSync(true);
-
     engine::World world(800, 600);
-
-    world.addObject(180, 180, 40, 40, {"player"}, "assets/imgs/pancake.bmp", AxisAlignedBoundingBox(glm::vec2(0, 0), glm::vec2(40, 40)));
-    world.addObject(400, 200, 40, 40, {"rotatable"}, "assets/imgs/pancake.bmp", AxisAlignedBoundingBox(glm::vec2(0, 0), glm::vec2(40, 40)));
-    world.addObject(0, 400, 200, 800, {"ground"}, "assets/imgs/ground.png", AxisAlignedBoundingBox(glm::vec2(0,0), glm::vec2(200, 800)));
-    
     engine::world::active(world);
 
     engine::Scripting scripting;
 
-    scripting.bind<Texture>("Texture",
-        sol::constructors<Texture()>(),
-        "path", &Texture::path
-    );
-
-    scripting.bind<Transformer>("Transformer",
-        sol::constructors<Transformer()>(),
-        "x", &Transformer::x,
-        "y", &Transformer::y,
-        "w", &Transformer::w,
-        "h", &Transformer::h
-    );
-
-    scripting.bind<Controller>("Controller",
-        sol::constructors<Controller()>(),
+    engine::scripting::register_component<Controller>(
+        "Controller", scripting,
         "speed", &Controller::speed
     );
 
+    engine::scripting::register_component<Name>(
+        "Name", scripting, 
+        "name", &Name::name
+    );
+
+    mayak::gfx::register_components(scripting);
+
+    Entity& player = world.addEntity();
+    player.components.add<Controller>("Controller", Controller{300});
+    player.components.add<Name>("Name", Name{.name="player"});
+    player.components.add<mayak::gfx::Texture>("Texture", mayak::gfx::Texture{.path="assets/imgs/pancake.bmp"});
+    player.components.add<mayak::gfx::Transform>("Transform", mayak::gfx::Transform{.x=100, .y=100, .w=100, .h=100});
+
+    auto name = player.components.get<Name>("Name");
+    auto controller = player.components.get<Controller>("Controller");
+    auto texture = player.components.get<mayak::gfx::Texture>("Texture");
+
+    if (name && controller && texture)
+        mlogger.setLevel(info) << "initialized player named " << name->name << " with speed: " << controller->speed << " and texture: " << texture->path << mayak::logger::core::flush;
+    else
+        mlogger.setLevel(error) << "name or controller is null!";
+
+    mayak::gfx::setVSync(true);
     if (!mayak::gfx::init("Window")) {
         mlogger.setLevel(error) << "failed to initialize SDL!" << mayak::logger::core::flush;
     }

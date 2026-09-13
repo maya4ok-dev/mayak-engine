@@ -14,7 +14,7 @@
 namespace engine::scripting {
 
 using add_fn = std::function<sol::object(Entity &entity, std::string_view name, sol::table)>;
-using get_fn = std::function<sol::object(Entity &entity, std::string_view name)>;
+using get_fn = std::function<void(sol::table& table, Entity &entity, std::string_view name)>;
 
 namespace {
     std::unordered_map<std::string, add_fn> add_fns;
@@ -86,20 +86,16 @@ void register_get(std::string_view type, Args&&... args) {
     auto fields = std::make_tuple(std::forward<Args>(args)...);
 
     get_fns.emplace(type,
-        [fields = std::move(fields)](Entity &entity, std::string_view component_name) -> sol::object {
-            sol::table table;
+        [fields = std::move(fields)](sol::table& table, Entity &entity, std::string_view component_name) {
             const auto* component = entity.components.get<Component>(component_name);
+            if (!component)
+                return;
 
             std::apply(
                 [&](auto&&... args) {
                     get_members(*component, table, std::forward<decltype(args)>(args)...);
                 },
                 fields
-            );
-
-            return sol::make_object(
-                table.lua_state(),
-                component
             );
         }
     );
@@ -117,7 +113,15 @@ void register_component(std::string_view name, Scripting& scripting, Args&&... a
 
     auto get_it = get_fns.find(std::string(name));
     if (get_it != get_fns.end())
-        scripting.bind("entity_get_component", get_it->second);
+        scripting.bind("entity_get_component", 
+            [&scripting](Entity &entity, std::string_view name) {
+                auto table = scripting.add_table();
+                auto it = get_fns.find(std::string(name));
+                if (it != get_fns.end())
+                    it->second(table, entity, name);
+                return table;
+            }
+        );
 }
 
 } // namespace engine::scripting

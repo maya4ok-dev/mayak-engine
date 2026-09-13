@@ -1,24 +1,21 @@
 #pragma once
 
 #include <vector>
-#include <unordered_set>
 
-#include "aabb.hpp"
-#include "object.hpp"
+#include "ecs.hpp"
 
 namespace engine {
 
 class World {
-    std::vector<Object> objects;
+    std::vector<Entity> entities;
 public:
     int width, height;
 
     World(int width, int height) : width(width), height(height) {}
 
-    Object* addObject(float x, float y, float h, float w, std::unordered_set<std::string> tags, const char* path, AxisAlignedBoundingBox hitbox);
-
-    void destroyObject(Object &object);
-    std::vector<Object>* getObjects();
+    Entity& addEntity();
+    void destroyEntity(Entity& entity);
+    std::vector<Entity>& getEntities();
 };
 
 namespace world {

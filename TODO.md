@@ -14,11 +14,12 @@
         - necessary because you can't bind ComponentStorage directly due to the templates
         - [x] struct's api
         - [x] implement getters
-        - [ ] implement registration
+        - [x] implement registration
         - [x] scripting bindings
             - [x] global register api
                 - made the whole bridge global because there's no need in class for now
             - [x] struct bind
+        - [ ] make getter return not a table copy, maybe something like sol::userdata will help
 - [x] look up if `SDL_GetScancodeFromName` can be used instad of keyMap
     - replaced
 - [x] replace old `DIM` with `World` and make it less cringy

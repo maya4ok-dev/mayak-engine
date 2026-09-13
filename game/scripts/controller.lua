@@ -1,26 +1,30 @@
-local objects = world.active():getObjects()
-local speed = 250
+-- for now, it won't work because entity_get_component returns a table copy
+
+local entities = world.active():getEntities()
+
+local controller = nil
+local transform = nil
+
+for _, entity in ipairs(entities) do
+    if name ~= "player" then goto continue end
+
+    controller = entity_get_component(entity, "Controller")
+    transform = entity_get_component(entity, "Transform")
+
+    ::continue::
+end
 
 return function(dt)
-    for _, object in ipairs(objects) do
-        for _, tag in ipairs(object.tags) do
-
-            if tag ~= "player" then goto continue end
-                
-            if isKeyPressed("UP") then
-                object.posY = object.posY - speed * dt
-            end
-            if isKeyPressed("DOWN") then
-                object.posY = object.posY + speed * dt
-            end
-            if isKeyPressed("LEFT") then
-                object.posX = object.posX - speed * dt
-            end
-            if isKeyPressed("RIGHT") then
-                object.posX = object.posX + speed * dt
-            end
-
-            ::continue::
-        end
+    if isKeyPressed("UP") then
+        transform.y = transform.y - controller.speed * dt
+    end
+    if isKeyPressed("DOWN") then
+        transform.y = transform.y + controller.speed * dt
+    end
+    if isKeyPressed("LEFT") then
+        transform.x = transform.x - controller.speed * dt
+    end
+    if isKeyPressed("RIGHT") then
+        transform.x = transform.x + controller.speed * dt
     end
 end

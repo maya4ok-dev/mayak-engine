@@ -1,7 +1,6 @@
 #include "scripting.hpp"
 #include "world.hpp"
 #include "aabb.hpp"
-#include "object.hpp"
 #include "logger.hpp"
 #include "ecs-lua-bridge.hpp"
 
@@ -10,56 +9,20 @@
 
 // bind engine's api
 void bind_api(sol::state& state) {
-    // 1. Register Object usertype
-    state.new_usertype<Object>("Object",
-        "posX",
-        sol::property(
-            &Object::GetPosX, &Object::SetPosX
-        ),
-        "posY",
-        sol::property(
-            &Object::GetPosY, &Object::SetPosY
-        ),
-        "height",
-        sol::property(
-            &Object::GetHeight, &Object::SetHeight
-        ),
-        "width",
-        sol::property(
-            &Object::GetWidth, &Object::SetWidth
-        ),
-        "path",
-        sol::property(
-            &Object::GetPath, &Object::SetPath
-        ),
-        "tags",
-        sol::property([](Object& obj) {
-            return sol::as_table(obj.tags);
-        })
-    );
-    state.new_usertype<engine::scripting::ComponentBridge>("ComponentBridge",
-        "add", &engine::scripting::ComponentBridge::add,
-        "get", &engine::scripting::ComponentBridge::get
-    );
-
     state.new_usertype<Entity>("Entity", "components", &Entity::components);
 
     // World
     state.new_usertype<engine::World>("World",
         "width",
-        sol::readonly(
-            &engine::World::width
-        ),
+        sol::readonly(&engine::World::width),
         "height",
-        sol::readonly(
-            &engine::World::height
-        ),
-        "addObject",
-        &engine::World::addObject,
-        "destroyObject",
-        &engine::World::destroyObject,
-        "getObjects",
-        &engine::World::getObjects
+        sol::readonly(&engine::World::height),
+        "addEntity",
+        &engine::World::addEntity,
+        "destroyEntity",
+        &engine::World::destroyEntity,
+        "getEntities",
+        &engine::World::getEntities
     );
 
     auto world = state.create_named_table("world");

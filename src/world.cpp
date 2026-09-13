@@ -1,20 +1,18 @@
 #include <algorithm>
-
 #include "world.hpp"
-#include "object.hpp"
 
-Object* engine::World::addObject(float x, float y, float h, float w, std::unordered_set<std::string> tags, const char* path, AxisAlignedBoundingBox hitbox) {
-    return &objects.emplace_back(x, y, h, w, tags, path, hitbox);
+Entity& engine::World::addEntity() {
+    return entities.emplace_back();
 }
 
-std::vector<Object>* engine::World::getObjects() {
-    return &objects;
+std::vector<Entity>& engine::World::getEntities() {
+    return entities;
 }
 
-void engine::World::destroyObject(Object &object) {
-    objects.erase(std::remove_if(objects.begin(), objects.end(),
-        [&object](Object &current) {
-            return &current == &object;
+void engine::World::destroyEntity(Entity &entity) {
+    entities.erase(std::remove_if(entities.begin(), entities.end(),
+        [&entity](Entity &current) {
+            return &current == &entity;
         }
     ));
 }

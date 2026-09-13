@@ -10,12 +10,10 @@ class ComponentStorage {
 
 public:
     template<typename Component, typename... Args>
-    void add(std::string_view name, Args&&... args) {
+    Component& add(std::string_view name, Args&&... args) {
         auto component = std::make_any<Component>(std::forward<Args>(args)...);
-        components.emplace(
-            name,
-            std::move(component)
-        );
+        auto [it, _] = components.emplace(name, std::move(component));
+        return std::any_cast<Component&>(it->second);
     }
 
     template<typename Component>

@@ -2,6 +2,7 @@
 
 #include "logger.hpp"
 #include <sol/state.hpp>
+#include <utility>
 
 namespace engine {
 
@@ -18,6 +19,19 @@ public:
         if (!state[name.data()].valid())
             mlogger.setLevel(error) << "[scripting] " << name.data() << " is invalid" << mayak::logger::core::flush;
         return type;
+    }
+
+    template<typename... Args>
+    void bind(Args&&... args) {
+        state.set(std::forward<Args>(args)...);
+    }
+
+    sol::table add_table(std::string_view name) {
+        return state.create_named_table(std::string(name));
+    }
+
+    sol::table add_table() {
+        return state.create_table();
     }
 
     // run scripts

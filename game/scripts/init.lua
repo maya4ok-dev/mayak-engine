@@ -1,22 +1,20 @@
-local controller = require("scripts.controller")
+local entities = world.active():getEntities()
 local greeter = require("scripts.greet-world")
-local rotater = require("scripts.rotate")
 
-local controller_component = nil
-local speed_was_printed = false
+local debug = false
 
 function update(dt)
-    if not controller_component then
-        controller_component = Controller.new()
-        controller_component.speed = 300
+    if not debug then
+        for _, entity in ipairs(entities) do
+            local controller = entity_get_component(entity, "Controller")
+            local name = entity_get_component(entity, "Name")
+            if not controller or not name then goto continue end
+            print("speed of " .. name.name .. ": " .. controller.speed)
+            ::continue::
+        end
+
+        debug = true
     end
 
-    if not speed_was_printed then
-        print("speed is " .. controller_component.speed)
-        speed_was_printed = true
-    end
-
-    controller(dt)
     greeter(dt)
-    rotater(dt)
 end
