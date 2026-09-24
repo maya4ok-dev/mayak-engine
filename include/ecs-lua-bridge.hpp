@@ -1,7 +1,6 @@
 #include "ecs.hpp"
 #include "scripting.hpp"
-#include <sol/object.hpp>
-#include <sol/raii.hpp>
+
 #include <sol/sol.hpp>
 
 #include <type_traits>
@@ -125,3 +124,38 @@ void register_component(std::string_view name, Scripting& scripting, Args&&... a
 }
 
 } // namespace engine::scripting
+
+class EcsLuaBridge {
+    using Getter = std::function<sol::object(sol::this_state, Entity&)>;
+    std::unordered_map<std::string, Getter> getters;
+    sol::state_view lua;
+
+public:
+    template <typename T, typename... Bindings>
+    void register_component(std::string name, Bindings&&... bindings) {
+        lua.new_usertype<T>(name, std::forward<Bindings>(bindings)...);
+        getters.emplace(name, [name](sol::this_state state, Entity& entity) -> sol::object {
+            sol::state_view lua(state);
+
+            T* component = entity.components.get<T>(name);
+            if (!component)
+                return sol::make_object(lua, sol::lua_nil);
+
+            return sol::make_object(lua, component);
+
+        });
+    }
+
+    sol::object get(std::string_view name, sol::this_state state, Entity& entity) {
+        auto it = getters.find(std::string(name));
+
+        if (it == getters.end())
+            return sol::make_object(
+                sol::state_view(state),
+                sol::lua_nil
+            );
+
+        return it->second(state, entity);
+    }
+
+};
