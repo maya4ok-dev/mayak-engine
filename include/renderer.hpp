@@ -3,6 +3,7 @@
 #pragma once
 
 #include "scripting.hpp"
+#include "ecs-lua-bridge.hpp"
 
 namespace mayak::gfx {
 
@@ -14,7 +15,7 @@ namespace mayak::gfx {
         float x, y, w, h;
     };
 
-    void register_components(engine::Scripting& scripting);
+    void register_components(engine::Scripting& scripting, EcsLuaBridge& bridge);
 
     /// \brief Initializes the renderer by creating a window and renderer and by loading all textures
     ///

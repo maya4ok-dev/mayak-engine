@@ -10,7 +10,7 @@
         - [ ] destroy method
         - [ ] has method
         - [x] get method
-    - [ ] lua component storage bridge
+    - [x] lua component storage bridge
         - necessary because you can't bind ComponentStorage directly due to the templates
         - [x] struct's api
         - [x] implement getters
@@ -19,12 +19,13 @@
             - [x] global register api
                 - made the whole bridge global because there's no need in class for now
             - [x] struct bind
-        - [ ] make getter return not a table copy, maybe something like sol::userdata will help
+        - [x] make getter return not a table copy, maybe something like sol::userdata will help
             - sol::usertype gotta help, it doesn't require to copy the component
             - [x] implement a bridge that uses sol::usertype
-            - [ ] move to the sol::usertype bridge
-            - [ ] test if the concept works
-            - [ ] make a proxy that combines the scripting and the bridge
+            - [x] move to the sol::usertype bridge
+            - [x] test if the concept works
+            - it worked! and it's way simpler
+            - though, made it a class again because it will be used in proxy
 - [x] look up if `SDL_GetScancodeFromName` can be used instad of keyMap
     - replaced
 - [x] replace old `DIM` with `World` and make it less cringy
@@ -39,3 +40,4 @@
 - [ ] avoid calling `state["update"]` every frame
 - [ ] make a bridge between world and renderer to isolate them
 - [ ] abstract renderer
+- [ ] make a proxy that combines the scripting and the bridge

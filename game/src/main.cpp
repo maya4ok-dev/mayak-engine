@@ -24,18 +24,19 @@ int main() {
     engine::world::active(world);
 
     engine::Scripting scripting;
+    EcsLuaBridge bridge(scripting.get());
 
-    engine::scripting::register_component<Controller>(
-        "Controller", scripting,
+    bridge.register_component<Controller>(
+        "Controller",
         "speed", &Controller::speed
     );
 
-    engine::scripting::register_component<Name>(
-        "Name", scripting, 
+    bridge.register_component<Name>(
+        "Name",
         "name", &Name::name
     );
 
-    mayak::gfx::register_components(scripting);
+    mayak::gfx::register_components(scripting, bridge);
 
     Entity& player = world.addEntity();
     player.components.add<Controller>("Controller", Controller{300});

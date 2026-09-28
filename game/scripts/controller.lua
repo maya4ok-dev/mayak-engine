@@ -1,20 +1,23 @@
--- for now, it won't work because entity_get_component returns a table copy
-
-local entities = world.active():getEntities()
-
+local entities = nil
 local controller = nil
 local transform = nil
-
-for _, entity in ipairs(entities) do
-    if name ~= "player" then goto continue end
-
-    controller = entity_get_component(entity, "Controller")
-    transform = entity_get_component(entity, "Transform")
-
-    ::continue::
-end
+local initialized = false
 
 return function(dt)
+    if not initialized then
+        entities = world.active():getEntities()
+        for _, entity in ipairs(entities) do
+            name = entity:get("Name")
+            if not name or name.name ~= "player" then goto continue end
+
+            controller = entity:get("Controller")
+            transform = entity:get("Transform")
+
+            ::continue::
+        end
+        initialized = true
+    end
+
     if isKeyPressed("UP") then
         transform.y = transform.y - controller.speed * dt
     end

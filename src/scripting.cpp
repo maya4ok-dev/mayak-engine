@@ -9,7 +9,6 @@
 
 // bind engine's api
 void bind_api(sol::state& state) {
-    state.new_usertype<Entity>("Entity", "components", &Entity::components);
 
     // World
     state.new_usertype<engine::World>("World",

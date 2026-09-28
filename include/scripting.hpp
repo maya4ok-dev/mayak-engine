@@ -36,6 +36,10 @@ public:
 
     // run scripts
     void operator()(double dt);
+
+    sol::state_view get() {
+        return state;
+    }
 };
 
 } // namespace engine 
