@@ -8,6 +8,7 @@
 #include "logger.hpp"
 #include "ecs.hpp"
 #include "ecs-lua-bridge.hpp"
+#include "components.hpp"
 
 struct Controller {
     int speed;
@@ -36,17 +37,17 @@ int main() {
         "name", &Name::name
     );
 
-    mayak::gfx::register_components(scripting, bridge);
+    engine::ecs::register_components(scripting, bridge);
 
     Entity& player = world.addEntity();
     player.components.add<Controller>("Controller", Controller{300});
     player.components.add<Name>("Name", Name{.name="player"});
-    player.components.add<mayak::gfx::Texture>("Texture", mayak::gfx::Texture{.path="assets/imgs/pancake.bmp"});
-    player.components.add<mayak::gfx::Transform>("Transform", mayak::gfx::Transform{.x=100, .y=100, .w=100, .h=100});
+    player.components.add<engine::ecs::Texture>("Texture", engine::ecs::Texture{.path="assets/imgs/pancake.bmp"});
+    player.components.add<engine::ecs::Transform>("Transform", engine::ecs::Transform{.x=100, .y=100, .w=100, .h=100});
 
     auto name = player.components.get<Name>("Name");
     auto controller = player.components.get<Controller>("Controller");
-    auto texture = player.components.get<mayak::gfx::Texture>("Texture");
+    auto texture = player.components.get<engine::ecs::Texture>("Texture");
 
     if (name && controller && texture)
         mlogger.setLevel(info) << "initialized player named " << name->name << " with speed: " << controller->speed << " and texture: " << texture->path << mayak::logger::core::flush;
@@ -57,6 +58,15 @@ int main() {
     if (!mayak::gfx::init("Window")) {
         mlogger.setLevel(error) << "failed to initialize SDL!" << mayak::logger::core::flush;
     }
+
+    auto resolution = mayak::gfx::resolution();
+
+    Camera camera = {
+        .x = 0,
+        .y = 0,
+        .w = resolution.w,
+        .h = resolution.h
+    };
 
     const auto freq = SDL_GetPerformanceFrequency();
     auto last = SDL_GetPerformanceCounter();
@@ -76,7 +86,7 @@ int main() {
         SDL_PumpEvents();
         scripting(dt);
 
-        mayak::gfx::render();
+        mayak::gfx::render(camera);
     }
     mayak::gfx::cleanup();
     SDL_Quit();

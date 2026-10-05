@@ -2,13 +2,14 @@
 
 #include <SDL3/SDL.h>
 
-#include "ecs-lua-bridge.hpp"
+#include "camera.hpp"
 #include "ecs.hpp"
+#include "components.hpp"
 #include "renderer.hpp"
-#include "scripting.hpp"
 #include "world.hpp"
 #include "logger.hpp"
 
+#include <SDL3/SDL_oldnames.h>
 #include <map>
 #include <string>
 
@@ -31,19 +32,6 @@ namespace{
 }
 
 namespace mayak::gfx {
-    void register_components(engine::Scripting& scripting, EcsLuaBridge& bridge) {
-        scripting.bind<Texture>("Texture", "path", &Texture::path);
-        scripting.bind<Transform>("Transform",
-            "x", &Transform::x, "y", &Transform::y,
-            "w", &Transform::w, "h", &Transform::h
-        );
-        bridge.register_component<Texture>("Texture", "path", &Texture::path);
-        bridge.register_component<Transform>("Transform",
-            "x", &Transform::x, "y", &Transform::y,
-            "w", &Transform::w, "h", &Transform::h
-        );
-    }
-
     bool init(const char* windowName) {
         // Initialize SDL
         if(!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
@@ -78,8 +66,8 @@ namespace mayak::gfx {
         mlogger << "set vsync to " << (VSync ? "on" : "off") << logger::core::flush;
 
         for (auto &entity : engine::world::active()->getEntities()) {
-            const Transform* transform_component = entity.components.get<Transform>("Transform");
-            const Texture *texture_component = entity.components.get<Texture>("Texture");
+            const auto *transform_component = entity.components.get<engine::ecs::Transform>("Transform");
+            const auto *texture_component = entity.components.get<engine::ecs::Texture>("Texture");
             if (!transform_component || !texture_component) {
                 mlogger.setLevel(debug) << "[gfx] no transform or texture components found on a component, skipping..." << logger::core::flush;
                 continue;
@@ -111,18 +99,24 @@ namespace mayak::gfx {
         return true;
     }
 
-    void render() {
+    void render(Camera& camera) {
         if (!isInitialized()) {
             mlogger.setLevel(error);
             mlogger << "renderer is not initialized" << logger::core::flush;
             return;
         }
 
+        auto world = engine::world::active();
+        auto relative = camera.relative(*world);
+
         SDL_RenderClear(renderer);
 
         // Render every object
-        for (auto &entity : engine::world::active()->getEntities()) {
-            Texture* texture_component = entity.components.get<Texture>("Texture");
+        for (auto entity_relative : relative) {
+            auto entity = entity_relative.first;
+            auto geometry = entity_relative.second;
+
+            auto* texture_component = entity->components.get<engine::ecs::Texture>("Texture");
             if (!texture_component) continue;
 
             SDL_Texture* texture = textureCache[texture_component->path].texture;
@@ -131,8 +125,7 @@ namespace mayak::gfx {
                 return;
             }
 
-            const Transform* transform = entity.components.get<Transform>("Transform");
-            SDL_FRect rect = {transform->x, transform->y, transform->w, transform->h};
+            SDL_FRect rect = {static_cast<float>(geometry.x), static_cast<float>(geometry.y), static_cast<float>(geometry.w), static_cast<float>(geometry.h)};
 
             if (!SDL_RenderTexture(renderer, texture, nullptr, &rect)) {
                 mlogger.setLevel(error);
@@ -170,6 +163,12 @@ namespace mayak::gfx {
         VSync = value;
         if (renderer)
             SDL_SetRenderVSync(renderer, VSync);
+    }
+
+    Resolution resolution() {
+        Resolution res;
+        SDL_GetCurrentRenderOutputSize(renderer, &res.w, &res.h);
+        return res;
     }
 }
 

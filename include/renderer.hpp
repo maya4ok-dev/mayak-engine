@@ -2,20 +2,13 @@
 
 #pragma once
 
-#include "scripting.hpp"
-#include "ecs-lua-bridge.hpp"
+#include "camera.hpp"
 
 namespace mayak::gfx {
 
-    struct Texture {
-        const char *path;
+    struct Resolution {
+        int w, h;
     };
-
-    struct Transform {
-        float x, y, w, h;
-    };
-
-    void register_components(engine::Scripting& scripting, EcsLuaBridge& bridge);
 
     /// \brief Initializes the renderer by creating a window and renderer and by loading all textures
     ///
@@ -37,7 +30,7 @@ namespace mayak::gfx {
     ///
     /// After all objects have been rendered, the rendered screen will be presented
     /// to the user.
-    void render();
+    void render(Camera& camera);
 
     /// \brief Clean up the renderer and window
     /// 
@@ -68,4 +61,7 @@ namespace mayak::gfx {
     /// rate with the monitor's refresh rate. This can help prevent tearing,
     /// but can also cause the frame rate to drop.
     void setVSync(bool state);
+
+    Resolution resolution();
+
 };
