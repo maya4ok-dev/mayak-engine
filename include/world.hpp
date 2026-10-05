@@ -9,10 +9,6 @@ namespace engine {
 class World {
     std::vector<Entity> entities;
 public:
-    int width, height;
-
-    World(int width, int height) : width(width), height(height) {}
-
     Entity& addEntity();
     void destroyEntity(Entity& entity);
     std::vector<Entity>& getEntities();

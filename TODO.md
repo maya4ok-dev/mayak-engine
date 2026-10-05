@@ -31,8 +31,10 @@
 - [x] replace old `DIM` with `World` and make it less cringy
 - [ ] wrap up every engine component into `engine::` namespace
 - [ ] make a mega premium ultra production-ready sample that doesn't make me cry
-- [ ] implement camera
-    - [ ] make the `World` endless or at least configurable
+- [x] implement camera
+    - [x] make the `World` endless or at least configurable
+        - now `World` is just an entity container
+    - [ ] add lua bindings
 - [x] rework scripting system
     - [x] clean up the existing one
     - [x] wrap it all in a class

@@ -14,7 +14,7 @@ namespace mayak::gfx {
     ///
     /// \param name The name of the window
     /// \return true if the renderer was initialized successfully, false otherwise
-    bool init(const char *name);
+    bool init(const char *name, int width, int height);
 
     /// \brief Render all objects in the current DIM
     ///

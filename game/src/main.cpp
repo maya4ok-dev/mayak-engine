@@ -21,7 +21,7 @@ struct Name {
 int main() {
     init_logger();
 
-    engine::World world(800, 600);
+    engine::World world;
     engine::world::active(world);
 
     engine::Scripting scripting;
@@ -55,7 +55,7 @@ int main() {
         mlogger.setLevel(error) << "name or controller is null!";
 
     mayak::gfx::setVSync(true);
-    if (!mayak::gfx::init("Window")) {
+    if (!mayak::gfx::init("Window", 800, 600)) {
         mlogger.setLevel(error) << "failed to initialize SDL!" << mayak::logger::core::flush;
     }
 

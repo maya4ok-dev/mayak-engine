@@ -9,7 +9,6 @@
 #include "world.hpp"
 #include "logger.hpp"
 
-#include <SDL3/SDL_oldnames.h>
 #include <map>
 #include <string>
 
@@ -32,7 +31,7 @@ namespace{
 }
 
 namespace mayak::gfx {
-    bool init(const char* windowName) {
+    bool init(const char* windowName, int width, int height) {
         // Initialize SDL
         if(!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
             mlogger.setLevel(error);
@@ -41,7 +40,7 @@ namespace mayak::gfx {
         }
 
         // Create SDL window
-        window = SDL_CreateWindow(windowName, engine::world::active()->width, engine::world::active()->height, 0);
+        window = SDL_CreateWindow(windowName, width, height, 0);
         if (window == nullptr) {
             mlogger.setLevel(error);
             mlogger << "failed to create window: " << SDL_GetError() << logger::core::flush;

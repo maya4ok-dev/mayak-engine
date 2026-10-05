@@ -2,7 +2,6 @@
 #include "world.hpp"
 #include "aabb.hpp"
 #include "logger.hpp"
-#include "ecs-lua-bridge.hpp"
 
 #include <sol/sol.hpp>
 #include <SDL3/SDL.h>
@@ -12,10 +11,6 @@ void bind_api(sol::state& state) {
 
     // World
     state.new_usertype<engine::World>("World",
-        "width",
-        sol::readonly(&engine::World::width),
-        "height",
-        sol::readonly(&engine::World::height),
         "addEntity",
         &engine::World::addEntity,
         "destroyEntity",
