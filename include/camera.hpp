@@ -33,3 +33,9 @@ public:
         return result;
     }
 };
+
+namespace engine::camera {
+
+    inline Camera active;
+
+}

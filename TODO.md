@@ -43,3 +43,4 @@
 - [ ] make a bridge between world and renderer to isolate them
 - [ ] abstract renderer
 - [ ] make a proxy that combines the scripting and the bridge
+- [ ] fix the bug where entity components after adding another entity are nullptrs

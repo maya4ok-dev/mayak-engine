@@ -1,8 +1,10 @@
 #include "scripting.hpp"
+#include "camera.hpp"
 #include "world.hpp"
 #include "aabb.hpp"
 #include "logger.hpp"
 
+#include <sol/property.hpp>
 #include <sol/sol.hpp>
 #include <SDL3/SDL.h>
 
@@ -29,6 +31,16 @@ void bind_api(sol::state& state) {
         static_cast<engine::World* (*)()>(engine::world::active),
         static_cast<void (*)(engine::World&)>(engine::world::active)
     );
+
+    state.new_usertype<Camera>("Camera",
+        "x", &Camera::x,
+        "y", &Camera::y,
+        "w", &Camera::w,
+        "h", &Camera::h
+    );
+
+    auto camera = state.create_named_table("camera");
+    camera["active"] = &engine::camera::active;
 
     // 3. Register AxisAlignedBoundingBox usertype (hitbox)
     state.new_usertype<AxisAlignedBoundingBox>("AxisAlignedBoundingBox",

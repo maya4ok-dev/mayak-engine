@@ -1,6 +1,6 @@
 local greeted = false
 
-return function(dt) 
+return function() 
     if not greeted then 
         print("Hello, World!")
         greeted = true

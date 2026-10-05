@@ -1,5 +1,6 @@
 #pragma once
 
+#include "logger.hpp"
 #include <any>
 #include <string>
 #include <string_view>
