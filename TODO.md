@@ -20,8 +20,7 @@
                 - made the whole bridge global because there's no need in class for now
             - [x] struct bind
         - [x] make getter return not a table copy, maybe something like sol::userdata will help
-            - sol::usertype gotta help, it doesn't require to copy the component
-            - [x] implement a bridge that uses sol::usertype
+            - sol::usertype gotta help, it doesn't require to copy the component [x] implement a bridge that uses sol::usertype
             - [x] move to the sol::usertype bridge
             - [x] test if the concept works
             - it worked! and it's way simpler
@@ -34,7 +33,7 @@
 - [x] implement camera
     - [x] make the `World` endless or at least configurable
         - now `World` is just an entity container
-    - [ ] add lua bindings
+    - [x] add lua bindings
 - [x] rework scripting system
     - [x] clean up the existing one
     - [x] wrap it all in a class
