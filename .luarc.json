@@ -1,0 +1,5 @@
+{
+    "workspace.library": [
+        "${workspaceFolder}/lua-api"
+    ]
+}
