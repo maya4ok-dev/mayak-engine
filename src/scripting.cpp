@@ -32,16 +32,6 @@ void bind_api(sol::state& state) {
         static_cast<void (*)(engine::World&)>(engine::world::active)
     );
 
-    state.new_usertype<Camera>("Camera",
-        "x", &Camera::x,
-        "y", &Camera::y,
-        "w", &Camera::w,
-        "h", &Camera::h
-    );
-
-    auto camera = state.create_named_table("camera");
-    camera["active"] = &engine::camera::active;
-
     // 3. Register AxisAlignedBoundingBox usertype (hitbox)
     state.new_usertype<AxisAlignedBoundingBox>("AxisAlignedBoundingBox",
         "lowerLeftX",

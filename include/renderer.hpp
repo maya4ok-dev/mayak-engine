@@ -30,7 +30,7 @@ namespace mayak::gfx {
     ///
     /// After all objects have been rendered, the rendered screen will be presented
     /// to the user.
-    void render(Camera& camera);
+    void render(engine::components::Camera& camera);
 
     /// \brief Clean up the renderer and window
     /// 

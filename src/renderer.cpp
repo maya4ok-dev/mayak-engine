@@ -98,7 +98,7 @@ namespace mayak::gfx {
         return true;
     }
 
-    void render(Camera& camera) {
+    void render(engine::components::Camera& camera) {
         if (!isInitialized()) {
             mlogger.setLevel(error);
             mlogger << "renderer is not initialized" << logger::core::flush;

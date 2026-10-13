@@ -67,12 +67,14 @@ int main() {
 
     auto resolution = mayak::gfx::resolution();
 
-    engine::camera::active = {
+    Entity& camera_entity = world.addEntity();
+    camera_entity.components.add<Name>("Name", Name{.name="camera"});
+    auto &camera = camera_entity.components.add<engine::components::Camera>("Camera", engine::components::Camera{
         .x = 0,
         .y = 0,
-        .w = resolution.w,
-        .h = resolution.h
-    };
+        .w = static_cast<float>(resolution.w),
+        .h = static_cast<float>(resolution.h)
+    });
 
     const auto freq = SDL_GetPerformanceFrequency();
     auto last = SDL_GetPerformanceCounter();
@@ -92,7 +94,7 @@ int main() {
         SDL_PumpEvents();
         scripting(dt);
 
-        mayak::gfx::render(engine::camera::active);
+        mayak::gfx::render(camera);
     }
     mayak::gfx::cleanup();
     SDL_Quit();
