@@ -18,8 +18,8 @@ public:
     }
 
     template<typename Component>
-    Component* get(std::string_view name) {
-        auto it = components.find(name.data());
+    Component* get(const std::string &name) {
+        auto it = components.find(name);
         if (it == components.end())
             return nullptr;
 
