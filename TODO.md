@@ -43,3 +43,8 @@
 - [ ] abstract renderer
 - [ ] make a proxy that combines the scripting and the bridge
 - [ ] fix the bug where entity components after adding another entity are nullptrs
+- [ ] add documentation
+    - [ ] improve README.md
+    - [ ] integrate doxygen
+    - [ ] create a catppuccin mocha theme
+    - [ ] write documentation pages
