@@ -29,13 +29,11 @@ int main() {
     EcsLuaBridge bridge(scripting.get());
 
     bridge.register_component<Controller>(
-        "Controller",
-        "speed", &Controller::speed
+        "Controller", "speed", &Controller::speed
     );
 
     bridge.register_component<Name>(
-        "Name",
-        "name", &Name::name
+        "Name", "name", &Name::name
     );
 
     engine::ecs::register_components(bridge);
@@ -43,6 +41,7 @@ int main() {
     Entity& player = world.addEntity();
     player.components.add<Controller>("Controller", Controller{300});
     player.components.add<Name>("Name", Name{.name="player"});
+    player.components.add<engine::ecs::Texture>("Texture", engine::ecs::Texture{.path="assets/player.png"});
     player.components.add<engine::ecs::Transform>("Transform", engine::ecs::Transform{.x=100, .y=100, .w=50, .h=50});
     player.components.add<AABB>("AABB", AABB{.x=100, .y=100, .w=50, .h=50});
 
