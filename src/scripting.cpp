@@ -1,10 +1,8 @@
 #include "scripting.hpp"
 #include "camera.hpp"
 #include "world.hpp"
-#include "aabb.hpp"
 #include "logger.hpp"
 
-#include <sol/property.hpp>
 #include <sol/sol.hpp>
 #include <SDL3/SDL.h>
 
@@ -30,26 +28,6 @@ void bind_api(sol::state& state) {
     world["active"] = sol::property(
         static_cast<engine::World* (*)()>(engine::world::active),
         static_cast<void (*)(engine::World&)>(engine::world::active)
-    );
-
-    // 3. Register AxisAlignedBoundingBox usertype (hitbox)
-    state.new_usertype<AxisAlignedBoundingBox>("AxisAlignedBoundingBox",
-        "lowerLeftX",
-        sol::readonly(
-            &AxisAlignedBoundingBox::GetLowerLeftX
-        ),
-        "lowerLeftY",
-        sol::readonly(
-            &AxisAlignedBoundingBox::GetLowerLeftY
-        ),
-        "upperRightX",
-        sol::readonly(
-            &AxisAlignedBoundingBox::GetUpperRightX
-        ),
-        "upperRightY",
-        sol::readonly(
-            &AxisAlignedBoundingBox::GetUpperRightY
-        )
     );
 
     state.set_function("isKeyPressed", [](const char *name) {

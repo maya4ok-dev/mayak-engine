@@ -9,6 +9,7 @@
 #include "ecs.hpp"
 #include "ecs-lua-bridge.hpp"
 #include "components.hpp"
+#include "aabb.hpp"
 
 struct Controller {
     int speed;
@@ -42,23 +43,14 @@ int main() {
     Entity& player = world.addEntity();
     player.components.add<Controller>("Controller", Controller{300});
     player.components.add<Name>("Name", Name{.name="player"});
-    player.components.add<engine::ecs::Texture>("Texture", engine::ecs::Texture{.path="assets/imgs/pancake.bmp"});
-    player.components.add<engine::ecs::Transform>("Transform", engine::ecs::Transform{.x=100, .y=100, .w=100, .h=100});
+    player.components.add<engine::ecs::Transform>("Transform", engine::ecs::Transform{.x=100, .y=100, .w=50, .h=50});
+    player.components.add<AABB>("AABB", AABB{.x=100, .y=100, .w=50, .h=50});
 
-    Entity& pancake = world.addEntity();
-    pancake.components.add<Name>("Name", Name{.name="pancake"});
-    pancake.components.add<engine::ecs::Texture>("Texture", engine::ecs::Texture{.path="assets/imgs/pancake.bmp"});
-    pancake.components.add<engine::ecs::Transform>("Transform", engine::ecs::Transform{.x=300, .y=300, .w=50, .h=50});
-
-    // FIXME: entity components after adding another entity are nullptrs
-    auto name = player.components.get<Name>("Name");
-    auto controller = player.components.get<Controller>("Controller");
-    auto texture = player.components.get<engine::ecs::Texture>("Texture");
-
-    if (name && controller && texture)
-        mlogger.setLevel(info) << "initialized player named " << name->name << " with speed: " << controller->speed << " and texture: " << texture->path << mayak::logger::core::flush;
-    else
-        mlogger.setLevel(error) << "[player] name: " << name << "; controller: " << controller << "; texture: " << texture << mayak::logger::core::flush;
+    Entity& enemy = world.addEntity();
+    enemy.components.add<Name>("Name", Name{.name="enemy"});
+    enemy.components.add<engine::ecs::Texture>("Texture", engine::ecs::Texture{.path="assets/enemy.png"});
+    enemy.components.add<engine::ecs::Transform>("Transform", engine::ecs::Transform{.x=300, .y=300, .w=50, .h=50});
+    enemy.components.add<AABB>("AABB", AABB{.x=300, .y=300, .w=100, .h=100});
 
     mayak::gfx::setVSync(true);
     if (!mayak::gfx::init("Window", 800, 600)) {

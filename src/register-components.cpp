@@ -1,5 +1,6 @@
 #include "components.hpp"
 #include "camera.hpp"
+#include "aabb.hpp"
 
 void engine::ecs::register_components(EcsLuaBridge& bridge) {
     bridge.register_component<Texture>("Texture", "path", &Texture::path);
@@ -12,6 +13,13 @@ void engine::ecs::register_components(EcsLuaBridge& bridge) {
         "y", &engine::components::Camera::y,
         "w", &engine::components::Camera::w,
         "h", &engine::components::Camera::h
+    );
+    bridge.register_component<AABB>("AABB",
+        "x", &AABB::x,
+        "y", &AABB::y,
+        "w", &AABB::w,
+        "h", &AABB::h,
+        "intersects", &AABB::intersects
     );
 }
 

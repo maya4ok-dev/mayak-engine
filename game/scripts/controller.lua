@@ -1,6 +1,7 @@
 local entities = nil
 local controller = nil
 local transform = nil
+local aabb = nil
 local initialized = false
 
 return function(dt)
@@ -12,6 +13,7 @@ return function(dt)
 
             controller = entity:get("Controller")
             transform = entity:get("Transform")
+            aabb = entity:get("AABB")
 
             ::continue::
         end
@@ -30,4 +32,8 @@ return function(dt)
     if isKeyPressed("RIGHT") then
         transform.x = transform.x + controller.speed * dt
     end
+    aabb.x = transform.x
+    aabb.y = transform.y
+    aabb.w = transform.w
+    aabb.h = transform.h
 end
