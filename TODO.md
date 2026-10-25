@@ -2,7 +2,6 @@
 - [x] figure out why graphics don't work
     - because removing the old logger caused the whole texture loading block to become the `if` body
 - [x] load only initial file, not the whole `scripts/` directory
-- [ ] add `setup()` function to scripts
 - [ ] implement a basic ecs
     - [x] entity
     - [ ] component storage
@@ -11,7 +10,7 @@
         - [ ] has method
         - [x] get method
     - [x] lua component storage bridge
-        - necessary because you can't bind ComponentStorage directly due to the templates
+        - necessary because ComponentStorage can't be bound directly
         - [x] struct's api
         - [x] implement getters
         - [x] implement registration
@@ -20,16 +19,24 @@
                 - made the whole bridge global because there's no need in class for now
             - [x] struct bind
         - [x] make getter return not a table copy, maybe something like sol::userdata will help
-            - sol::usertype gotta help, it doesn't require to copy the component [x] implement a bridge that uses sol::usertype
+            - sol::usertype gotta help, it doesn't require to copy the component
+            - [x] implement a bridge that uses sol::usertype
             - [x] move to the sol::usertype bridge
             - [x] test if the concept works
-            - it worked! and it's way simpler
-            - though, made it a class again because it will be used in proxy
+            - it worked and it's way simpler!
+            - though, now it's a class again because it will be used in proxy
 - [x] look up if `SDL_GetScancodeFromName` can be used instad of keyMap
     - replaced
 - [x] replace old `DIM` with `World` and make it less cringy
-- [ ] wrap up every engine component into `engine::` namespace
 - [ ] make a mega premium ultra production-ready sample that doesn't make me cry
+    - [x] draw sprites
+    - [x] implement AABB
+    - [ ] implement setting background color
+    - [ ] enemies
+        - [ ] spawn
+        - [ ] move
+        - [ ] kill the player on collision
+        - [ ] reuse if it's offscreen
 - [x] implement camera
     - [x] make the `World` endless or at least configurable
         - now `World` is just an entity container
@@ -44,7 +51,8 @@
 - [ ] make a proxy that combines the scripting and the bridge
 - [ ] fix the bug where entity components after adding another entity are nullptrs
 - [ ] add documentation
-    - [ ] improve README.md
+    - [x] improve README.md
     - [ ] integrate doxygen
     - [ ] create a catppuccin mocha theme
     - [ ] write documentation pages
+- [ ] standardize api
