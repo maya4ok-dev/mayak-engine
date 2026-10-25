@@ -1,7 +1,7 @@
 #include "scripting.hpp"
-#include "camera.hpp"
 #include "world.hpp"
 #include "logger.hpp"
+#include "renderer.hpp"
 
 #include <sol/sol.hpp>
 #include <SDL3/SDL.h>
@@ -33,6 +33,10 @@ void bind_api(sol::state& state) {
     state.set_function("isKeyPressed", [](const char *name) {
         return SDL_GetKeyboardState(nullptr)[SDL_GetScancodeFromName(name)] != 0;
     });
+
+    auto renderer = state.create_named_table("renderer");
+
+    renderer.set_function("background", mayak::gfx::setBackground);
 }
 
 #define DEFAULT_MAIN_SCRIPT "scripts/init.lua"

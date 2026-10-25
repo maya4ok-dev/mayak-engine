@@ -64,4 +64,5 @@ namespace mayak::gfx {
 
     Resolution resolution();
 
+    void setBackground(uint8_t r, uint8_t g, uint8_t b);
 };

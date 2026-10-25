@@ -56,6 +56,8 @@ int main() {
         mlogger.setLevel(error) << "failed to initialize SDL!" << mayak::logger::core::flush;
     }
 
+    mayak::gfx::setBackground(30, 30, 46);
+
     auto resolution = mayak::gfx::resolution();
 
     Entity& camera_entity = world.addEntity();

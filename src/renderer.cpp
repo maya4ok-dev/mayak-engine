@@ -169,5 +169,9 @@ namespace mayak::gfx {
         SDL_GetCurrentRenderOutputSize(renderer, &res.w, &res.h);
         return res;
     }
+
+    void setBackground(uint8_t r, uint8_t g, uint8_t b) {
+        SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+    }
 }
 
