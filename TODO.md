@@ -31,9 +31,9 @@
 - [ ] make a mega premium ultra production-ready sample that doesn't make me cry
     - [x] draw sprites
     - [x] implement AABB
-    - [ ] implement setting background color
+    - [x] implement setting background color
     - [ ] enemies
-        - [ ] spawn
+        - [x] spawn
         - [ ] move
         - [ ] kill the player on collision
         - [ ] reuse if it's offscreen

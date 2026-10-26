@@ -11,6 +11,9 @@
 #include "components.hpp"
 #include "aabb.hpp"
 
+constexpr int SCREEN_W = 800;
+constexpr int SCREEN_H = 600;
+
 struct Controller {
     int speed;
 };
@@ -19,8 +22,14 @@ struct Name {
     std::string name;
 };
 
+struct EnemySpeed {
+    int x, y;
+};
+
 int main() {
     init_logger();
+
+    std::srand(std::time(nullptr));
 
     engine::World world;
     engine::world::active(world);
@@ -36,7 +45,13 @@ int main() {
         "Name", "name", &Name::name
     );
 
+    bridge.register_component<EnemySpeed>("EnemySpeed",
+        "x", &EnemySpeed::x,
+        "y", &EnemySpeed::y
+    );
+
     engine::ecs::register_components(bridge);
+
 
     Entity& player = world.addEntity();
     player.components.add<Controller>("Controller", Controller{300});
@@ -45,14 +60,48 @@ int main() {
     player.components.add<engine::ecs::Transform>("Transform", engine::ecs::Transform{.x=100, .y=100, .w=50, .h=50});
     player.components.add<AABB>("AABB", AABB{.x=100, .y=100, .w=50, .h=50});
 
-    Entity& enemy = world.addEntity();
-    enemy.components.add<Name>("Name", Name{.name="enemy"});
-    enemy.components.add<engine::ecs::Texture>("Texture", engine::ecs::Texture{.path="assets/enemy.png"});
-    enemy.components.add<engine::ecs::Transform>("Transform", engine::ecs::Transform{.x=300, .y=300, .w=50, .h=50});
-    enemy.components.add<AABB>("AABB", AABB{.x=300, .y=300, .w=100, .h=100});
+    for (int i = 0; i < 10; i++) {
+        // 0 left
+        // 1 right
+        // 2 top
+        // 3 bottom
+        const int side = std::rand() % 4;
+
+        engine::ecs::Transform transform = {.w = 25, .h = 25};
+        EnemySpeed speed = {0};
+
+        if (side == 0) {
+            transform.x = -transform.w;
+            transform.y = rand() % SCREEN_H;
+            speed.x = 1;
+            speed.y = rand() % 3 - 1;
+        } else if (side == 1) {
+            transform.x = SCREEN_W;
+            transform.y = rand() % SCREEN_H;
+            speed.x = -1;
+            speed.y = rand() % 3 - 1;
+        } else if (side == 2) {
+            transform.y = -transform.h;
+            transform.x = rand() % SCREEN_W;
+            speed.y = 1;
+            speed.x = rand() % 3 - 1;
+        } else if (side == 3) {
+            transform.y = SCREEN_H;
+            transform.x = rand() % SCREEN_W;
+            speed.y = -1;
+            speed.x = rand() % 3 - 1;
+        }
+    
+        Entity& enemy = world.addEntity();
+        enemy.components.add<Name>("Name", Name{.name="enemy"});
+        enemy.components.add<engine::ecs::Texture>("Texture", engine::ecs::Texture{.path="assets/enemy.png"});
+        enemy.components.add<engine::ecs::Transform>("Transform", transform);
+        enemy.components.add<AABB>("AABB", AABB{.x=transform.x, .y=transform.y, .w=transform.w, .h=transform.h});
+        enemy.components.add<EnemySpeed>("EnemySpeed", speed);
+    }
 
     mayak::gfx::setVSync(true);
-    if (!mayak::gfx::init("Window", 800, 600)) {
+    if (!mayak::gfx::init("Window", SCREEN_W, SCREEN_H)) {
         mlogger.setLevel(error) << "failed to initialize SDL!" << mayak::logger::core::flush;
     }
 
@@ -65,8 +114,8 @@ int main() {
     auto &camera = camera_entity.components.add<engine::components::Camera>("Camera", engine::components::Camera{
         .x = 0,
         .y = 0,
-        .w = static_cast<float>(resolution.w),
-        .h = static_cast<float>(resolution.h)
+        .w = static_cast<float>(SCREEN_W),
+        .h = static_cast<float>(SCREEN_H)
     });
 
     const auto freq = SDL_GetPerformanceFrequency();
