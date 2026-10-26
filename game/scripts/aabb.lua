@@ -1,7 +1,6 @@
 local player_hitbox = nil
-local enemy_hitboxes = {}
+local enemies = {}
 local initialized = false
-local intersected_once = false
 
 return function()
     if not initialized then
@@ -13,7 +12,11 @@ return function()
             if name.name == "player" then
                 player_hitbox = entity:get("AABB")
             elseif name.name == "enemy" then
-                table.insert(enemy_hitboxes, entity:get("AABB"))
+                local enemy = {
+                    self = entity,
+                    hitbox = entity:get("AABB")
+                }
+                table.insert(enemies, enemy)
             end
 
             ::continue::
@@ -23,19 +26,22 @@ return function()
     end
 
     assert(player_hitbox, "player AABB not found")
-    assert(#enemy_hitboxes > 0, "no enemies")
+    assert(#enemies > 0, "no enemies")
 
     local intersecting = false
 
-    for _, enemy_hitbox in ipairs(enemy_hitboxes) do
-        if player_hitbox:intersects(enemy_hitbox) then
+    for _, enemy in ipairs(enemies) do
+        if player_hitbox:intersects(enemy.hitbox) then
+            print("intersecting!")
             intersecting = true
             break
         end
     end
 
-    if intersecting ~= intersected_once then
-        print(intersecting and "intersecting!" or "not intersecting!")
-        intersected_once = intersecting
+    if intersecting then
+        for _, enemy in ipairs(enemies) do
+            place_enemy(enemy.self)
+        end
     end
+
 end

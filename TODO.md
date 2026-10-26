@@ -35,7 +35,7 @@
     - [ ] enemies
         - [x] spawn
         - [x] move
-        - [ ] kill the player on collision
+        - [x] kill the player on collision
         - [ ] reuse if it's offscreen
 - [x] implement camera
     - [x] make the `World` endless or at least configurable

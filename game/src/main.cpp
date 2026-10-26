@@ -11,20 +11,9 @@
 #include "components.hpp"
 #include "aabb.hpp"
 
-constexpr int SCREEN_W = 800;
-constexpr int SCREEN_H = 600;
-
-struct Controller {
-    int speed;
-};
-
-struct Name {
-    std::string name;
-};
-
-struct EnemySpeed {
-    int x, y;
-};
+#include "enemy.hpp"
+#include "config.hpp"
+#include "game-components.hpp"
 
 int main() {
     init_logger();
@@ -52,7 +41,6 @@ int main() {
 
     engine::ecs::register_components(bridge);
 
-
     Entity& player = world.addEntity();
     player.components.add<Controller>("Controller", Controller{300});
     player.components.add<Name>("Name", Name{.name="player"});
@@ -61,44 +49,13 @@ int main() {
     player.components.add<AABB>("AABB", AABB{.x=100, .y=100, .w=50, .h=50});
 
     for (int i = 0; i < 10; i++) {
-        // 0 left
-        // 1 right
-        // 2 top
-        // 3 bottom
-        const int side = std::rand() % 4;
-
-        engine::ecs::Transform transform = {.w = 25, .h = 25};
-        EnemySpeed speed = {0};
-
-        if (side == 0) {
-            transform.x = -transform.w;
-            transform.y = rand() % SCREEN_H;
-            speed.x = 1;
-            speed.y = rand() % 3 - 1;
-        } else if (side == 1) {
-            transform.x = SCREEN_W;
-            transform.y = rand() % SCREEN_H;
-            speed.x = -1;
-            speed.y = rand() % 3 - 1;
-        } else if (side == 2) {
-            transform.y = -transform.h;
-            transform.x = rand() % SCREEN_W;
-            speed.y = 1;
-            speed.x = rand() % 3 - 1;
-        } else if (side == 3) {
-            transform.y = SCREEN_H;
-            transform.x = rand() % SCREEN_W;
-            speed.y = -1;
-            speed.x = rand() % 3 - 1;
-        }
-    
-        Entity& enemy = world.addEntity();
-        enemy.components.add<Name>("Name", Name{.name="enemy"});
-        enemy.components.add<engine::ecs::Texture>("Texture", engine::ecs::Texture{.path="assets/enemy.png"});
-        enemy.components.add<engine::ecs::Transform>("Transform", transform);
-        enemy.components.add<AABB>("AABB", AABB{.x=transform.x, .y=transform.y, .w=transform.w, .h=transform.h});
-        enemy.components.add<EnemySpeed>("EnemySpeed", speed);
+        auto &entity = world.addEntity();
+        entity.components.add<Name>("Name", Name{.name="enemy"});
+        entity.components.add<engine::ecs::Texture>("Texture", engine::ecs::Texture{.path="assets/enemy.png"});
+        place_enemy(entity);
     }
+
+    scripting.bind("place_enemy", &place_enemy);
 
     mayak::gfx::setVSync(true);
     if (!mayak::gfx::init("Window", SCREEN_W, SCREEN_H)) {

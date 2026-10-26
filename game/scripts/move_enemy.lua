@@ -16,11 +16,6 @@ return function()
                     hitbox = entity:get("AABB")
                 }
                 table.insert(enemies, enemy)
-
-                print("enemy:", enemy)
-                print("speed:", enemy.speed)
-                print("transform:", enemy.transform)
-                print("hitbox:", enemy.hitbox)
             end
 
             ::continue::
