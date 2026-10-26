@@ -34,7 +34,7 @@
     - [x] implement setting background color
     - [ ] enemies
         - [x] spawn
-        - [ ] move
+        - [x] move
         - [ ] kill the player on collision
         - [ ] reuse if it's offscreen
 - [x] implement camera

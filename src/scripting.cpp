@@ -43,7 +43,7 @@ void bind_api(sol::state& state) {
 
 engine::Scripting::Scripting() {
     state = sol::state();
-    state.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::os);
+    state.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::os, sol::lib::table);
     bind_api(state);
 
     try {
