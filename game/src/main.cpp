@@ -14,6 +14,7 @@
 #include "enemy.hpp"
 #include "config.hpp"
 #include "game-components.hpp"
+#include "place-player.hpp"
 
 int main() {
     init_logger();
@@ -41,6 +42,15 @@ int main() {
 
     engine::ecs::register_components(bridge);
 
+    Entity& camera_entity = world.addEntity();
+    camera_entity.components.add<Name>("Name", Name{.name="camera"});
+    auto &camera = camera_entity.components.add<engine::components::Camera>("Camera", engine::components::Camera{
+        .x = 0,
+        .y = 0,
+        .w = static_cast<float>(SCREEN_W),
+        .h = static_cast<float>(SCREEN_H)
+    });
+
     Entity& player = world.addEntity();
     player.components.add<Controller>("Controller", Controller{300});
     player.components.add<Name>("Name", Name{.name="player"});
@@ -56,6 +66,7 @@ int main() {
     }
 
     scripting.bind("place_enemy", &place_enemy);
+    scripting.bind("place_player", &place_player);
 
     mayak::gfx::setVSync(true);
     if (!mayak::gfx::init("Window", SCREEN_W, SCREEN_H)) {
@@ -65,15 +76,6 @@ int main() {
     mayak::gfx::setBackground(30, 30, 46);
 
     auto resolution = mayak::gfx::resolution();
-
-    Entity& camera_entity = world.addEntity();
-    camera_entity.components.add<Name>("Name", Name{.name="camera"});
-    auto &camera = camera_entity.components.add<engine::components::Camera>("Camera", engine::components::Camera{
-        .x = 0,
-        .y = 0,
-        .w = static_cast<float>(SCREEN_W),
-        .h = static_cast<float>(SCREEN_H)
-    });
 
     const auto freq = SDL_GetPerformanceFrequency();
     auto last = SDL_GetPerformanceCounter();

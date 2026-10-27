@@ -37,9 +37,8 @@
         - [x] move
         - [x] kill the player on collision
         - [x] reuse if it's offscreen
-    - [ ] place a player in the center
-        - [ ] at start
-        - [ ] on death
+        - [ ] make enemy movement FPS independent
+    - [x] place a player in the center on collision and start
     - [ ] type a message in the console on collisison
     - [ ] trap a player inside a camera
 - [x] implement camera
