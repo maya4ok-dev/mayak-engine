@@ -47,8 +47,8 @@ return function()
     if intersecting then
         for _, enemy in ipairs(enemies) do
             place_enemy(enemy.self)
-            place_player(camera, player)
         end
+        place_player(camera, player)
     end
 
 end
