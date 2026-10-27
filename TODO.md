@@ -32,11 +32,16 @@
     - [x] draw sprites
     - [x] implement AABB
     - [x] implement setting background color
-    - [ ] enemies
+    - [x] enemies
         - [x] spawn
         - [x] move
         - [x] kill the player on collision
-        - [ ] reuse if it's offscreen
+        - [x] reuse if it's offscreen
+    - [ ] place a player in the center
+        - [ ] at start
+        - [ ] on death
+    - [ ] type a message in the console on collisison
+    - [ ] trap a player inside a camera
 - [x] implement camera
     - [x] make the `World` endless or at least configurable
         - now `World` is just an entity container
