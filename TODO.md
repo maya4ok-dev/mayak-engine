@@ -25,8 +25,7 @@
             - [x] test if the concept works
             - it worked and it's way simpler!
             - though, now it's a class again because it will be used in proxy
-- [x] look up if `SDL_GetScancodeFromName` can be used instad of keyMap
-    - replaced
+- [x] look up if `SDL_GetScancodeFromName` can be used instad of keyMap - replaced
 - [x] replace old `DIM` with `World` and make it less cringy
 - [ ] make a mega premium ultra production-ready sample that doesn't make me cry
     - [x] draw sprites
@@ -39,8 +38,8 @@
         - [x] reuse if it's offscreen
         - [ ] make enemy movement FPS independent
     - [x] place a player in the center on collision and start
-    - [ ] type a message in the console on collisison
-    - [ ] trap a player inside a camera
+    - [x] type a message in the console on collisison
+    - [x] trap a player inside a camera
 - [x] implement camera
     - [x] make the `World` endless or at least configurable
         - now `World` is just an entity container

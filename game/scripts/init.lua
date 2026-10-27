@@ -31,6 +31,6 @@ function update(dt)
 
     controller(dt)
     move_enemy()
-    aabb()
+    aabb(dt)
     greeter()
 end
