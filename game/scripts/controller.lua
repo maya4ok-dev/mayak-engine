@@ -1,14 +1,14 @@
-local entities = nil
 local controller = nil
 local transform = nil
 local aabb = nil
+
 local initialized = false
 
 return function(dt)
     if not initialized then
-        entities = world.active():getEntities()
+        local entities = world.active():getEntities()
         for _, entity in ipairs(entities) do
-            name = entity:get("Name")
+            local name = entity:get("Name")
             if not name or name.name ~= "player" then goto continue end
 
             controller = entity:get("Controller")
@@ -19,6 +19,10 @@ return function(dt)
         end
         initialized = true
     end
+
+    assert(controller, "player's controller componenet not found")
+    assert(transform, "player's transform componenet not found")
+    assert(aabb, "player's hitbox componenet not found")
 
     if isKeyPressed("UP") then
         transform.y = transform.y - controller.speed * dt
@@ -32,6 +36,7 @@ return function(dt)
     if isKeyPressed("RIGHT") then
         transform.x = transform.x + controller.speed * dt
     end
+
     aabb.x = transform.x
     aabb.y = transform.y
     aabb.w = transform.w
